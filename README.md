@@ -23,9 +23,9 @@ call it like so:
          width      : 250                    // width of the tree panel
       })
       
-      and then for every layer you want to use it 
-      asign an extra attribute {lyrControlOpt} during layer initiliasation
-      like so:
+and then for every layer you want to use it 
+asign an extra attribute {lyrControlOpt} during layer initiliasation
+like so:
       
       new ol.layer.Tile({  
         title:"OSM Layer",
