@@ -13,6 +13,10 @@ Version 0.1
 ## Code Example
 
 call it like so:
+      
+      
+      
+      
       new ol.control.LayerControl({
          title      : "Layer Management",    //the title on top of the tree panel
          draggable  : true,                  //true||false
