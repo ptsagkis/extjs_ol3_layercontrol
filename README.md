@@ -24,14 +24,14 @@ call it like so:
       })
       
 and then for every layer you want to use it 
-asign an extra attribute {lyrControlOpt} during layer initiliasation
+asign an extra object {lyrControlOpt} during layer initiliasation
 like so:
       
       new ol.layer.Tile({  
         title:"OSM Layer",
         source: new ol.source.OSM(),
         lyrControlOpt : {
-           legendGroup : 'Tile Layers',               // tree group this layer belongs to
+           legendGroup : 'Tile Layers',               // tree group this layer belongs to. A parent tree node will be created for each group found
            legendnodeid: 'osmid',                     //this must be unique for every layer added
            legendTitle : "Open Street Map",           //Title of tree node
            legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
