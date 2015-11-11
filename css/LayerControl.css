@@ -1,0 +1,9 @@
+.ol-layercontrol {
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+    padding: 2px;
+    position: absolute;
+    width:20px;
+    top: 5px;
+    right:80px;
+    }
