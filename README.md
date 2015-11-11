@@ -20,7 +20,7 @@ call it like so:
       })
       
 and then for every layer you want to use it 
-asign an extra attribute {lyrControlOpt} during layer initiliasation
+asign an extra object {lyrControlOpt} during layer initiliasation
 like so:
       
       new ol.layer.Tile({  
