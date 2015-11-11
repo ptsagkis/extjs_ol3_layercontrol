@@ -12,16 +12,16 @@ Version 0.1
 
 ## Code Example
 
-#call it like so:
+call it like so:
       new ol.control.LayerControl({
          title      : "Layer Management",    //the title on top of the tree panel
          draggable  : true,                  //true||false
          width      : 250                    // width of the tree panel
       })
       
-      and then for every layer you want to use it 
-      asign an extra attribute {lyrControlOpt} during layer initiliasation
-      like so:
+and then for every layer you want to use it 
+asign an extra attribute {lyrControlOpt} during layer initiliasation
+like so:
       
       new ol.layer.Tile({  
         title:"OSM Layer",
@@ -32,7 +32,7 @@ Version 0.1
            legendTitle : "Open Street Map",           //Title of tree node
            legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"  //image next to layrname 
         }
-      }
+      })
 
 
 ## Motivation
