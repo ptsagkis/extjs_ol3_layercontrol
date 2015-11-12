@@ -1,4 +1,4 @@
-# extjs_ol3_layercontrol
+# openlayers 3 .Layer tree panel using etxjs 5.1
 
 
 ## Synopsis
