@@ -47,8 +47,11 @@ A short description of the motivation behind the creation and maintenance of the
 
 you need to include the following extjs files within the header of you html page
 these are:
+
 1. https://extjs.cachefly.net/ext/gpl/5.1.0/packages/ext-theme-classic/build/resources/ext-theme-classic-all-debug.css
+
 2. http://cdn.sencha.com/ext/gpl/5.1.0/build/ext-all-debug.js
+
 and the load your ol3 files as usual
 
 
