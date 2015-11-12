@@ -18,6 +18,8 @@ ol.control.LayerControl = function(opt_options) {
   this_.treePanel = this_.createThePanel(options);
   //set the layer moving during dragging a layer to a new position
   this_.lyrTreeNodeMooving = {};
+  //set the layers associated with the map. These are all the layers not just those within then control .
+  //the collection populates within setMap method of the control
   this_.lyrCollection = new ol.Collection(); 
 
     
@@ -193,7 +195,7 @@ var groupNames = new Array(); //an array of strings for the groups
      }
    }
   console.log("groupNames",groupNames);
-
+this_.groupNames = groupNames; 
 var childObjects = new Array();
 for (var g=0;g<groupNames.length;g++){
 childObjects[g] = { 
@@ -243,17 +245,9 @@ var store = this_.treePanel.getStore();
 //console.log("panelData",panelData);
 var rootData = {
         expanded: true,
-        children: [
-            { 
-              text          : 'Layers', 
-              expanded      : true, 
-              expandable    : true, 
-              allowDrag     : true, 
-              allowDrop     : true, 
-              children      : childObjects,
-              lyrloadingcon : ''
-            }
-        ]
+        allowDrag     : false, 
+        allowDrop     : true, 
+        children: childObjects
     }
 store.setRoot(rootData);
 
@@ -337,15 +331,17 @@ viewConfig: {
         beforedrop:function(node, data, overModel, dropPosition, dropHandlers) {
         var parentBefore = data.records[0].parentNode.data.text;
         var parentAfter = overModel.parentNode.data.text;
-            if (parentBefore!==parentAfter)
+        console.log("parentBefore",parentBefore);
+        console.log("parentAfter",parentAfter);
+            if (parentBefore!==parentAfter || (parentBefore==="Root" && parentAfter==="Root"))
             {
             dropHandlers.cancelDrop();    
             }
             else
             {
-            console.log("before drop")
-            console.log("index",data.records[0].data.index);
-            var idx = data.records[0].data.index;
+            var parentGroup = data.records[0].parentNode.data.text
+            var parentCount = getIndexOfString(this_.groupNames,parentGroup)+1;
+            var idx = Ext.getCmp('ol3treepanel').getView().indexOf(data.records[0]) - parentCount;
             var layersCollection = this_.getMap().getLayers();
             this_.disableLayerListeners(this_.lyrCollection);
             this_.lyrTreeNodeMooving = layersCollection.removeAt(idx);
@@ -353,9 +349,9 @@ viewConfig: {
             }
         },
         drop: function( node, data, overModel, dropPosition, eOpts){
-        console.log("after drop")
-        console.log("index",data.records[0].data.index);
-        var idx = data.records[0].data.index;
+        var parentGroup = data.records[0].parentNode.data.text
+        var parentCount = getIndexOfString(this_.groupNames,parentGroup)+1;
+        var idx = Ext.getCmp('ol3treepanel').getView().indexOf(data.records[0])- parentCount;
         var layersCollection = this_.getMap().getLayers();
         layersCollection.insertAt(idx,this_.lyrTreeNodeMooving);
         this_.lyrTreeNodeMooving = {};
@@ -375,7 +371,7 @@ listeners : {
             xtype   : 'button', 
             id      : 'editlyrprops',
             iconCls : 'save',
-            tooltip : 'ÁðïèÞêåõóç ÄéÜôáîçò ÅðéðÝäùí',
+            tooltip : 'Î‘Ï€Î¿Î¸Î®ÎºÎµÏ…ÏƒÎ· Î”Î¹Î¬Ï„Î±Î¾Î·Ï‚ Î•Ï€Î¹Ï€Î­Î´Ï‰Î½',
             handler : function(){
                 alert('save.....');
             }
@@ -432,6 +428,23 @@ var lyrsOnTree = this_.layers;
 function isInArray(value, array) {
   return array.indexOf(value) > -1;
 }
+
+/**
+ * function to get the index of a string within an array of strings
+ * it should retur the first index found or if no found should return -1
+ * @param {array} arrayToSearch the array of strings to search with
+ * @param {string} stringToSearch the string to search
+ * @returns -1 if not found or the first index of found
+ */
+function getIndexOfString(arrayToSearch, stringToSearch) {
+    for (var i = 0; i < arrayToSearch.length; i++) 
+     {  
+        if (arrayToSearch[i] == stringToSearch)
+            return i;
+     }
+    return -1;
+}
+
 /**
  * function to render the icon
  * verifing whether layer has benn loaded succesfully or not
