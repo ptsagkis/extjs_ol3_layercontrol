@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Extjs ol3 layercontrol by ptsagkis</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Extjs ol3 layercontrol</h1>
+        <h2>Adding a layer control using the extjs treepanel api</h2>
+        <a href="https://github.com/ptsagkis/extjs_ol3_layercontrol" class="button"><small>View project on</small> GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a id="openlayers-3-layer-tree-panel-using-etxjs-51" class="anchor" href="#openlayers-3-layer-tree-panel-using-etxjs-51" aria-hidden="true"><span class="octicon octicon-link"></span></a>openlayers 3 .Layer tree panel using etxjs 5.1</h1>
+
+<h2>
+<a id="synopsis" class="anchor" href="#synopsis" aria-hidden="true"><span class="octicon octicon-link"></span></a>Synopsis</h2>
+
+<p>Adding a layer control using the extjs treepanel api.</p>
+
+<p>Build on ol3 v3.10.1 and extjs 5.1 versions</p>
+
+<p>Version 0.1</p>
+
+<h2>
+<a id="code-example" class="anchor" href="#code-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Code Example</h2>
+
+<p>call it like so:</p>
+
+<pre><code>  new ol.control.LayerControl({
+     title      : "Layer Management",    //the title on top of the tree panel
+     draggable  : true,                  //true||false
+     width      : 250                    // width of the tree panel
+  })
+</code></pre>
+
+<p>and then for every layer you want to use it 
+asign an extra object {lyrControlOpt} during layer initiliasation
+like so:</p>
+
+<pre><code>  new ol.layer.Tile({  
+    title:"OSM Layer",
+    source: new ol.source.OSM(),
+    lyrControlOpt : {
+       legendGroup : 'Tile Layers',               // tree group this layer belongs to. A parent tree node will be created for each group found
+       legendnodeid: 'osmid',                     //this must be unique for every layer added
+       legendTitle : "Open Street Map",           //Title of tree node
+       legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
+    }
+  }
+</code></pre>
+
+<h2>
+<a id="motivation" class="anchor" href="#motivation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Motivation</h2>
+
+<p>A short description of the motivation behind the creation and maintenance of the project. This should explain <strong>why</strong> the project exists.</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>Provide code examples and explanations of how to get the project.</p>
+
+<h2>
+<a id="api-reference" class="anchor" href="#api-reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>API Reference</h2>
+
+<p>Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.</p>
+
+<h2>
+<a id="tests" class="anchor" href="#tests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tests</h2>
+
+<p>Describe and show how to run the tests with code examples.</p>
+
+<h2>
+<a id="contributors" class="anchor" href="#contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributors</h2>
+
+<p>Let people know how they can dive into the project, include important links to things like issue trackers, irc, twitter accounts if applicable.</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>A short snippet describing the license (MIT, Apache, etc.)</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/ptsagkis/extjs_ol3_layercontrol/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/ptsagkis/extjs_ol3_layercontrol/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/ptsagkis/extjs_ol3_layercontrol"></a> is maintained by <a href="https://github.com/ptsagkis">ptsagkis</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
