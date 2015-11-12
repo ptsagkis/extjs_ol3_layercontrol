@@ -12,7 +12,9 @@ Version 0.1
 
 ## Code Example
 example here
-http://ptsagkis.github.io/extjs_ol3_layercontrol/example.html
+
+[first example](http://ptsagkis.github.io/extjs_ol3_layercontrol/example.html)
+
 
 
 call it like so:
