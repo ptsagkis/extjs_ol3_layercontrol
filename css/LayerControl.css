@@ -7,3 +7,17 @@
     top: 5px;
     right:80px;
     }
+    
+    
+.laycntrlmapcont {
+    position:absolute;
+    width:100%;
+    height:100%;
+}
+
+.layrctlimgbtn {
+    display: block;
+    margin-left: auto; 
+    margin-right: auto;
+}
+
