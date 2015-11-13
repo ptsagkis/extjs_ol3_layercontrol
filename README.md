@@ -9,6 +9,12 @@ Build on ol3 v3.10.1 and extjs 5.1 versions
 
 Version 0.1
 
+## Supported Functionality
+1. drag and drop within group of layers and accossiated layer ordering
+2. check box to toggle layer visibility
+3. associated icons next to layer name for loadstart, loadend, loaderror events
+4. Add and remove layers dynamically
+5. drag treepanel
 
 ## Code Example
 example here
@@ -23,12 +29,7 @@ example here
 
 
 call it like so:
-      
-    options.title : 'Layer Management';
-  options.mapdivid : 'map';
-   options.draggable = typeof(options.draggable) !=='undefined'           ?  options.draggable : false;
-   options.width = typeof(options.width) !=='undefined'                   ?  options.width : 250; 
-   options.mapconstrained = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true;      
+
       
       
       new ol.control.LayerControl({
