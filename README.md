@@ -24,13 +24,19 @@ example here
 
 call it like so:
       
-      
+    options.title : 'Layer Management';
+  options.mapdivid : 'map';
+   options.draggable = typeof(options.draggable) !=='undefined'           ?  options.draggable : false;
+   options.width = typeof(options.width) !=='undefined'                   ?  options.width : 250; 
+   options.mapconstrained = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true;      
       
       
       new ol.control.LayerControl({
-         title      : "Layer Management",    //the title on top of the tree panel
-         draggable  : true,                  //true||false
-         width      : 250                    // width of the tree panel
+         title           : "Layer Management",    //the title on top of the tree panel
+         draggable       : true,                  //true||false
+         width           : 250,                   // width of the tree panel
+         mapdivid        : 'map',                 //div element of map
+         mapconstrained  : true                   //treepanel contstrained to mapdiv element 
       })
       
 and then for every layer you want to use it 
@@ -44,7 +50,7 @@ like so:
            legendGroup : 'Tile Layers',               // tree group this layer belongs to. A parent tree node will be created for each group found
            legendnodeid: 'osmid',                     //this must be unique for every layer added
            legendTitle : "Open Street Map",           //Title of tree node
-           legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
+           legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"  //a url for the image next to title
         }
       }
 
