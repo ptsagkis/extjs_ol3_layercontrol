@@ -5,36 +5,49 @@
  */
 ol.control.LayerControl = function(opt_options) {
 
-  var options = goog.isDef(opt_options) ? opt_options : {};
- // this.mapListeners = [];
+  var options = typeof(opt_options) !=='undefined' ? opt_options : {};
+  //set default values if not defined
+   options.title = typeof(options.title) !=='undefined'                   ?  options.title : 'Layer Management';
+   options.mapdivid = typeof(options.mapdivid) !=='undefined'             ?  options.mapdivid : 'map';
+   options.draggable = typeof(options.draggable) !=='undefined'           ?  options.draggable : false;
+   options.width = typeof(options.width) !=='undefined'                   ?  options.width : 250; 
+   options.mapconstrained = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true;     
+   console.log("options.target",options.target)
+
   
   
   var divControl = document.createElement('div');
-  divControl.innerHTML = '<img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS_Coz6FFp-dSQIOmTnSeyzK9D74enD7Tp4uE2xcyAuyOLfAqVY"</img>';
+  divControl.innerHTML = '<img class="layrctlimgbtn" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS_Coz6FFp-dSQIOmTnSeyzK9D74enD7Tp4uE2xcyAuyOLfAqVY"</img>';   
     
+  var divContainerControl =  document.createElement('div');
+  divContainerControl.className = "laycntrlmapcont";
+  divContainerControl.id = "laycntrlmapcont";
+  //var width = options.mapdivid
+  //document.getElementById(options.mapdivid).setAttribute("style","width:500px"); 
+  document.getElementById(options.mapdivid).appendChild(divContainerControl); 
   
   var this_ = this;
-  //creates the extjs tree panel 
-  this_.treePanel = this_.createThePanel(options);
+  
   //set the layer moving during dragging a layer to a new position
   this_.lyrTreeNodeMooving = {};
   //set the layers associated with the map. These are all the layers not just those within then control .
   //the collection populates within setMap method of the control
   this_.lyrCollection = new ol.Collection(); 
-
-    
-  //toggle the panel. show/hide
+  
+    //creates the extjs tree panel 
+  this_.treePanel = this_.createThePanel(options);
+    //toggle the panel. show/hide
   this_.toggleTreePanel = function(e) {
+  console.info("toggling the panel");
    var isVisble = this_.treePanel.isVisible();
    if (isVisble){
    this_.hideTreePanel();
    } else {
    this_.showTreePanel(e);
+   this_.treePanel.doLayout(true);
    }
   };
-  
-   
-
+    
   divControl.addEventListener('click', this_.toggleTreePanel, false);
   divControl.addEventListener('touchstart', this_.toggleTreePanel, false);
 
@@ -50,9 +63,17 @@ ol.control.LayerControl = function(opt_options) {
 };
 ol.inherits(ol.control.LayerControl, ol.control.Control);
 
-
-
-
+ol.control.LayerControl.prototype.toggleLayerTreePanel = function(e){
+console.info("toggleLayerTreePanel");
+var this_ = this;
+   var isVisble = this_.treePanel.isVisible();
+   if (isVisble){
+   this_.hideTreePanel();
+   } else {
+   this_.showTreePanel(e);
+   this_.treePanel.doLayout(true);
+   }
+}
 /**
  * 1. Asign the map to the control
  * 2. Asign the event "add","remove"  to the layers {ol.Collection} of the map
@@ -60,7 +81,7 @@ ol.inherits(ol.control.LayerControl, ol.control.Control);
  * 4. Build the child nodes to add on tree
  */
 ol.control.LayerControl.prototype.setMap = function(map) {
-
+console.log("setting the map",map);
     ol.control.Control.prototype.setMap.call(this, map);
     var lyrChildArray = new Array();
     if (map) {
@@ -257,7 +278,9 @@ store.setRoot(rootData);
  * show the panel
  */
 ol.control.LayerControl.prototype.showTreePanel = function (e){
+if (typeof(e) !=='undefined'){
 this.treePanel.setPosition(e.clientX-260,e.clientY+50,false);
+}
 this.treePanel.show();
 }
 
@@ -275,19 +298,23 @@ this.treePanel.hide();
  *@returns the panel itself {Ext.tree.Panel}
  */
 ol.control.LayerControl.prototype.createThePanel = function (opt){
+console.log("opt",opt)
 var this_ = this;
-console.log("createThePanel this_",this_)
-console.log("createThePanel");
 var store = Ext.create('Ext.data.TreeStore', {
     root: {
         expanded: true,
         children: []
     }
 });
+var elContstrainTo = "";
+if (opt.mapconstrained === true){
+elContstrainTo = opt.mapdivid
+}
 var retPanel = 
 Ext.create('Ext.tree.Panel', {
-renderTo: document.body,
-constrain:true,
+renderTo: document.getElementById('laycntrlmapcont'),
+constrain:opt.mapconstrained,
+constrainTo:elContstrainTo,
 manageHeight:true,
 title: opt.title,
 id: 'ol3treepanel',
@@ -378,6 +405,7 @@ listeners : {
         }
       ]
 });
+retPanel.doLayout(true);
 return retPanel;
 };
 
