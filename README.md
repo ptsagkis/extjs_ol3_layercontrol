@@ -15,6 +15,11 @@ example here
 
 [first example](http://ptsagkis.github.io/extjs_ol3_layercontrol/example.html)
 
+[mininalistic example](http://ptsagkis.github.io/extjs_ol3_layercontrol/example0_minimalistic.html)
+
+[example with options](http://ptsagkis.github.io/extjs_ol3_layercontrol/example1_withoptions.html)
+
+[with other controls](http://ptsagkis.github.io/extjs_ol3_layercontrol/example2_morecontrols.html)
 
 
 call it like so:
