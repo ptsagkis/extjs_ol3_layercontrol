@@ -24,11 +24,6 @@ example here
 
 call it like so:
       
-    options.title : 'Layer Management';
-  options.mapdivid : 'map';
-   options.draggable = typeof(options.draggable) !=='undefined'           ?  options.draggable : false;
-   options.width = typeof(options.width) !=='undefined'                   ?  options.width : 250; 
-   options.mapconstrained = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true;      
       
       
       new ol.control.LayerControl({
