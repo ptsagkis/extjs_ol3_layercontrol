@@ -4,7 +4,9 @@
   <link rel="stylesheet" type="text/css" href="https://extjs.cachefly.net/ext/gpl/5.1.0/packages/ext-theme-classic/build/resources/ext-theme-classic-all-debug.css"/>
   <link rel="stylesheet" type="text/css" href="http://openlayers.org/en/v3.10.1/css/ol.css"/>
   <link rel="stylesheet" type="text/css" href="css/LayerControl.css"/>
-  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   
   
   <script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.1.0/build/ext-all-debug.js" ></script>
@@ -12,20 +14,24 @@
   <script type="text/javascript" src="LayerControl.js" ></script>
   
   <script type="text/javascript">
-  Ext.onReady(function() { 
+  Ext.onReady(function() {
+    var lyrControl = new ol.control.LayerControl({
+         title          : "Layers on map",
+         draggable      : true,
+         width          : 250,
+         mapdivid       : 'map',
+         renderto       : document.getElementById('layrctlbtnid'),
+         mapconstrained : false //,
+         //target         : document.getElementById('layrctlbtnid')
+      });
+       
     var map = new ol.Map({
     controls: ol.control.defaults({
       attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
         collapsible: true
       })
     }).extend([
-      new ol.control.LayerControl({
-         title          : "Layers on map",
-         draggable      : true,
-         width          : 250,
-         mapdivid       : 'map',
-         mapconstrained : true
-      })
+      lyrControl
     ]),
     layers: [
       new ol.layer.Tile({  
@@ -74,6 +80,20 @@
            legendImgUrl : "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
         }
     }),
+    new ol.layer.Image({
+  //  extent: [-13884991, 2870341, -7455066, 6338219],
+    source: new ol.source.ImageWMS({
+      url: 'http://suite.opengeo.org/geoserver/wms',
+      params: {'LAYERS': 'opengeo:cities'},
+      serverType: 'geoserver'
+      }),
+    lyrControlOpt : {
+           legendGroup  : 'Wms Layers',
+           legendnodeid : 'wms2',
+           legendTitle  : "USA Cities ",
+           legendImgUrl : "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
+        }
+    }),
     new ol.layer.Tile({
     extent: [-13884991, 2870341, -7455066, 6338219],
     source: new ol.source.TileWMS({
@@ -83,8 +103,8 @@
       }),
       lyrControlOpt : {
            legendGroup  : 'Wms Layers',
-           legendnodeid : 'wms2',
-           legendTitle  : "usa:states",
+           legendnodeid : 'wms3',
+           legendTitle  : "USA States",
            legendImgUrl : "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
         }
     })
@@ -96,15 +116,21 @@
       rotation: 0
     })
     });
-    }); 
+    
+    });
+     
   </script>                 
   <title></title>
   </head>
   <body>
+  
+    <div id="map" style="height:50%" ></div>
 
-        <div id="map" style="width:100%;height:97%"></div>
+
+    <div id="layrctlbtnid"></div>
+
+
         
-
+  </div>
   </body>
 </html>
-

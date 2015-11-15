@@ -22,8 +22,6 @@ ol.control.LayerControl = function(opt_options) {
   var divContainerControl =  document.createElement('div');
   divContainerControl.className = "laycntrlmapcont";
   divContainerControl.id = "laycntrlmapcont";
-  //var width = options.mapdivid
-  //document.getElementById(options.mapdivid).setAttribute("style","width:500px"); 
   document.getElementById(options.mapdivid).appendChild(divContainerControl); 
   
   var this_ = this;
@@ -71,7 +69,7 @@ var this_ = this;
    this_.hideTreePanel();
    } else {
    this_.showTreePanel(e);
-   this_.treePanel.doLayout(true);
+   this_.treePanel.doLayout(true);  //force to layout
    }
 }
 /**
@@ -145,7 +143,7 @@ console.log("setting the map",map);
           console.log("no loading action available");
           }
           
-          
+           //build control's layers
           lyrChildArray.push(layer);
         }
         
@@ -209,6 +207,8 @@ console.log("layer removed",e);
 ol.control.LayerControl.prototype.setPanelData = function(data){
 console.log("setting panel data")
 var this_ = this;
+console.log("data",data)
+console.log("this_layers",this_.layers)
 var groupNames = new Array(); //an array of strings for the groups
    for (var f=0;f<data.length;f++){
      if (!isInArray(data[f].get('lyrControlOpt').legendGroup,groupNames)){//check if group name allready exists
