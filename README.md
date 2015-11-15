@@ -10,11 +10,20 @@ Build on ol3 v3.10.1 and extjs 5.1 versions
 Version 0.1
 
 ## Supported Functionality
+<<<<<<< HEAD
 1. drag and drop within group of layers and accossiated layer ordering
 2. check box to toggle layer visibility
 3. associated icons next to layer name for loadstart, loadend, loaderror events
 4. Add and remove layers dynamically
 5. drag treepanel
+=======
+1. drag and drop within group of layers and accossiated layer ordering on map
+2. check box to toggle layer visibility
+3. associated icons next to layer name for loadstart, loadend, loaderror events
+4. Add and remove layers dynamically
+5. icons before layer name for the legend style
+6. drag treepanel
+>>>>>>> refs/remotes/origin/master
 
 ## Code Example
 example here
