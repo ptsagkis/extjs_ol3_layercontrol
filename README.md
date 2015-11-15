@@ -13,7 +13,7 @@ Version 0.1
 1. drag and drop within group of layers and accossiated layer ordering on map
 2. check box to toggle layer visibility
 3. associated icons next to layer name for loadstart, loadend, loaderror events
-4. Add and remove layers dynamically
+4. Add and remove layers dynamically ( working on it)
 5. icons before layer name for the legend style
 6. drag treepanel
 
