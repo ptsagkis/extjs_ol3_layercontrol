@@ -33,6 +33,8 @@ example here
 
 [switching themes](http://ptsagkis.github.io/extjs_ol3_layercontrol/example3_themes.html)
 
+[legend icons from geoserver](http://ptsagkis.github.io/extjs_ol3_layercontrol/example3.html)
+
 
 call it like so:
 
