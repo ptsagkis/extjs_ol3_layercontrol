@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @constructor
  * @extends {ol.control.Control}
  * @param {Object=} opt_options Control options.
@@ -7,13 +7,17 @@ ol.control.LayerControl = function(opt_options) {
 
   var options = typeof(opt_options) !=='undefined' ? opt_options : {};
   //set default values if not defined
-   options.title = typeof(options.title) !=='undefined'                   ?  options.title : 'Layer Management';
-   options.mapdivid = typeof(options.mapdivid) !=='undefined'             ?  options.mapdivid : 'map';
-   options.draggable = typeof(options.draggable) !=='undefined'           ?  options.draggable : false;
-   options.width = typeof(options.width) !=='undefined'                   ?  options.width : 250; 
-   options.mapconstrained = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true;     
-   console.log("options.target",options.target)
-
+   options.title            = typeof(options.title) !=='undefined'          ?  options.title          : 'Layer Management';
+   options.mapdivid         = typeof(options.mapdivid) !=='undefined'       ?  options.mapdivid       : 'map';
+   options.draggable        = typeof(options.draggable) !=='undefined'      ?  options.draggable      : false;
+   options.width            = typeof(options.width) !=='undefined'          ?  options.width          : 250; 
+   options.mapconstrained   = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true; 
+   options.hidden           = typeof(options.hidden) !=='undefined'         ?  options.hidden         : true;
+   options.lang             = typeof(options.lang) !=='undefined'           ?  options.lang           : 'en';    
+   console.log("options",options)
+   
+   //initialise the tooltips extjs functionality
+   Ext.tip.QuickTipManager.init();
   
   
   var divControl = document.createElement('div');
@@ -25,15 +29,40 @@ ol.control.LayerControl = function(opt_options) {
   document.getElementById(options.mapdivid).appendChild(divContainerControl); 
   
   var this_ = this;
-  
+  //hold the otpions to the control
+  this_.options = options;
   //set the layer moving during dragging a layer to a new position
   this_.lyrTreeNodeMooving = {};
   //set the layers associated with the map. These are all the layers not just those within then control .
   //the collection populates within setMap method of the control
   this_.lyrCollection = new ol.Collection(); 
-  
+  //set the locale abbreviations
+  //you may add new language abbrevations here and then pass options.lang during control initialasiation
+  this_.langAbbrevations = {
+   en:{
+       ui : {
+        addlyrTip         : 'Add Layer',
+        removeLyrTip      : 'Remove Layer',
+        lyrPropsTip       : 'Layer Properties'
+       },
+       messasges: {
+       
+      }
+    },
+    gr:{
+       ui : {
+        addlyrTip         : 'Προσθήκη νέου',
+        removeLyrTip      : 'Διαγραφή απο τον χάρτη',
+        lyrPropsTip       : 'Ιδιότητες επιπέδου'
+       },
+       messasges: {
+       
+      }
+    }
+  }
     //creates the extjs tree panel 
   this_.treePanel = this_.createThePanel(options);
+  
     //toggle the panel. show/hide
   this_.toggleTreePanel = function(e) {
   console.info("toggling the panel");
@@ -41,17 +70,19 @@ ol.control.LayerControl = function(opt_options) {
    if (isVisble){
    this_.hideTreePanel();
    } else {
-   this_.showTreePanel(e);
-   this_.treePanel.doLayout(true);
+   this_.showTreePanel()
    }
+   this_.treePanel.doLayout(true);
   };
-    
+   //add the listeners function to the control button 
   divControl.addEventListener('click', this_.toggleTreePanel, false);
   divControl.addEventListener('touchstart', this_.toggleTreePanel, false);
 
   var element = document.createElement('div');
   element.className = 'ol-unselectable ol-layercontrol';
   element.appendChild(divControl);
+  
+  
 
   ol.control.Control.call(this, {
     element: element,
@@ -59,19 +90,10 @@ ol.control.LayerControl = function(opt_options) {
   });   
 
 };
+//and instatiate the control
 ol.inherits(ol.control.LayerControl, ol.control.Control);
 
-ol.control.LayerControl.prototype.toggleLayerTreePanel = function(e){
-console.info("toggleLayerTreePanel");
-var this_ = this;
-   var isVisble = this_.treePanel.isVisible();
-   if (isVisble){
-   this_.hideTreePanel();
-   } else {
-   this_.showTreePanel(e);
-   this_.treePanel.doLayout(true);  //force to layout
-   }
-}
+
 /**
  * 1. Asign the map to the control
  * 2. Asign the event "add","remove"  to the layers {ol.Collection} of the map
@@ -200,9 +222,9 @@ console.log("layer removed",e);
 
 
 /**
- *set the data object to be loaded
- *on the store of tree panel
- *and do the loading
+ * set the data object to be loaded
+ * on the store of tree panel
+ * and do the loading
  */
 ol.control.LayerControl.prototype.setPanelData = function(data){
 console.log("setting panel data")
@@ -246,24 +268,8 @@ childObjects[g] = {
   }
 }
  console.log("childObjects",childObjects);
-/**
-var panelData = new Array();
-   for (var i=0;i<data.length;i++){
-   panelData.push({
-   text       : data[i].get('lyrControlOpt').legendTitle,
-   leaf       : true,
-   valign     : "middle",
-   autoHeight : true,
-   checked    : data[i].get('visible'),
-   id         : data[i].get('lyrControlOpt').legendnodeid +"___treeid",
-   allowDrag  : true, 
-   allowDrop  : false,
-   icon       : data[i].get('lyrControlOpt').legendImgUrl
-   });
-  }
-*/
+
 var store = this_.treePanel.getStore();
-//console.log("panelData",panelData);
 var rootData = {
         expanded: true,
         allowDrag     : false, 
@@ -277,9 +283,11 @@ store.setRoot(rootData);
 /**
  * show the panel
  */
-ol.control.LayerControl.prototype.showTreePanel = function (e){
-if (typeof(e) !=='undefined'){
-this.treePanel.setPosition(e.clientX-260,e.clientY+50,false);
+ol.control.LayerControl.prototype.showTreePanel = function (pos){
+if (typeof(pos) !=='undefined'){
+console.log("pos",pos);
+this.treePanel.setPosition(pos.left,pos.top,false);
+//this.treePanel.setPosition(e.clientX-260,e.clientY+50,false);
 }
 this.treePanel.show();
 }
@@ -307,102 +315,121 @@ var store = Ext.create('Ext.data.TreeStore', {
     }
 });
 var elContstrainTo = "";
-if (opt.mapconstrained === true){
+if (opt.mapconstrained === true){ //if map constrain is true then constrain it within supplied map div
 elContstrainTo = opt.mapdivid
 }
 var retPanel = 
 Ext.create('Ext.tree.Panel', {
-renderTo: document.getElementById('laycntrlmapcont'),
-constrain:opt.mapconstrained,
-constrainTo:elContstrainTo,
-manageHeight:true,
-title: opt.title,
-id: 'ol3treepanel',
-width: opt.width,
-anchor: '100%', 
-shadow:true,
-autoScroll:true,
-store: store,
-rootVisible: false,
-draggable: opt.draggable,
-floating: true, 
-plain: true,
-closable: true,
-closeAction: 'hide',
-hidden:true,
-useArrows: true,
-columns:[
-          {
-                xtype: 'treecolumn',
-                flex:1,
-                sortable:false,
-                resizable:true,
-                menuDisabled: true,
-                dataIndex: 'text',
-                width: 200
-          },{
-                width: 55,
-                menuDisabled: true,
-                sortable:false,
-                resizable:false,
-                dataIndex: 'lyrloadingcon',
-                renderer:renderLoadingIcon,
-                align: 'center'
-          }
-        ],
-viewConfig: {
-    plugins: {
-        ptype: 'treeviewdragdrop'     
-        },
-    listeners: {    
-        beforedrop:function(node, data, overModel, dropPosition, dropHandlers) {
-        var parentBefore = data.records[0].parentNode.data.text;
-        var parentAfter = overModel.parentNode.data.text;
-        console.log("parentBefore",parentBefore);
-        console.log("parentAfter",parentAfter);
-            if (parentBefore!==parentAfter || (parentBefore==="Root" && parentAfter==="Root"))
-            {
-            dropHandlers.cancelDrop();    
-            }
-            else
-            {
+renderTo        : document.getElementById('laycntrlmapcont'),
+constrain       : opt.mapconstrained,
+constrainTo     : elContstrainTo,
+manageHeight    : true,
+title           : opt.title,
+id              : 'ol3treepanel',
+style           : {
+    'z-index' : 99999
+},
+width           : opt.width,
+anchor          : '100%', 
+shadow          : true,
+autoScroll      : true,
+store           : store,
+rootVisible     : false,
+draggable       : opt.draggable,
+floating        : true, 
+plain           : true,
+closable        : true,
+closeAction     : 'hide',
+hidden          : opt.hidden,
+useArrows       : true,
+hideHeaders     : true,
+columns         : [
+                    {
+                          xtype: 'treecolumn',
+                          flex:1,
+                          sortable:false,
+                          resizable:true,
+                          menuDisabled: true,
+                          dataIndex: 'text',
+                          width: 200
+                    },{
+                          width: 55,
+                          menuDisabled: true,
+                          sortable:false,
+                          resizable:false,
+                          dataIndex: 'lyrloadingcon',
+                          renderer:renderLoadingIcon,
+                          align: 'center'
+                    }
+                  ],
+viewConfig      : {
+            plugins: {
+              ptype: 'treeviewdragdrop'     
+            },
+            listeners: {    
+            beforedrop:function(node, data, overModel, dropPosition, dropHandlers) {
+            var parentBefore = data.records[0].parentNode.data.text;
+            var parentAfter = overModel.parentNode.data.text;
+            console.log("parentBefore",parentBefore);
+            console.log("parentAfter",parentAfter);
+                if (parentBefore!==parentAfter || (parentBefore==="Root" && parentAfter==="Root"))
+                {
+                dropHandlers.cancelDrop();    
+                }
+                else
+                {
+                var parentGroup = data.records[0].parentNode.data.text
+                var parentCount = getIndexOfString(this_.groupNames,parentGroup)+1;
+                var idx = Ext.getCmp('ol3treepanel').getView().indexOf(data.records[0]) - parentCount;
+                var layersCollection = this_.getMap().getLayers();
+                this_.disableLayerListeners(this_.lyrCollection);
+                this_.lyrTreeNodeMooving = layersCollection.removeAt(idx);
+                dropHandlers.processDrop();   
+                }
+            },
+            drop: function( node, data, overModel, dropPosition, eOpts){
             var parentGroup = data.records[0].parentNode.data.text
             var parentCount = getIndexOfString(this_.groupNames,parentGroup)+1;
-            var idx = Ext.getCmp('ol3treepanel').getView().indexOf(data.records[0]) - parentCount;
+            var idx = Ext.getCmp('ol3treepanel').getView().indexOf(data.records[0])- parentCount;
             var layersCollection = this_.getMap().getLayers();
-            this_.disableLayerListeners(this_.lyrCollection);
-            this_.lyrTreeNodeMooving = layersCollection.removeAt(idx);
-            dropHandlers.processDrop();   
+            layersCollection.insertAt(idx,this_.lyrTreeNodeMooving);
+            this_.lyrTreeNodeMooving = {};
+            this_.enableLayerListeners(this_.lyrCollection);
             }
+        }
+},
+listeners       : {
+        checkchange : function(node,check){
+            this_.toggleLyrVisibility(node.get('id').split("___")[0],check);
         },
-        drop: function( node, data, overModel, dropPosition, eOpts){
-        var parentGroup = data.records[0].parentNode.data.text
-        var parentCount = getIndexOfString(this_.groupNames,parentGroup)+1;
-        var idx = Ext.getCmp('ol3treepanel').getView().indexOf(data.records[0])- parentCount;
-        var layersCollection = this_.getMap().getLayers();
-        layersCollection.insertAt(idx,this_.lyrTreeNodeMooving);
-        this_.lyrTreeNodeMooving = {};
-        this_.enableLayerListeners(this_.lyrCollection);
-        }
-
-    }
+        itemcontextmenu: showLyrContextMenu
 },
-listeners : {
-    checkchange : function(node,check){
-        this_.toggleLyrVisibility(node.get('id').split("___")[0],check);
-    },
-    itemcontextmenu: showLyrContextMenu
-},
- tbar: [
-        { 
-            xtype   : 'button', 
-            id      : 'editlyrprops',
-            iconCls : 'save',
-            tooltip : 'Αποθήκευση Διάταξης Επιπέδων',
-            handler : function(){
-                alert('save.....');
+tbar            : [
+            { 
+                xtype   : 'button', 
+                id      : 'editlyrprops',
+                iconCls : 'layrctlprops',
+                tooltip : this_.langAbbrevations[opt.lang].ui.lyrPropsTip,
+                handler : function(){
+                    alert('show properties.....');
+                }
+            },{ 
+                xtype   : 'button', 
+                id      : 'addlyr',
+                iconCls : 'layrctladdNew',
+                tooltip : this_.langAbbrevations[opt.lang].ui.addlyrTip,
+                handler : function(){
+                    alert('add layer.....');
+                }
+            },{ 
+                xtype   : 'button', 
+                id      : 'removeLyr',
+                iconCls : 'layrctlremove',
+                tooltip : this_.langAbbrevations[opt.lang].ui.removeLyrTip,
+                handler : function(btn){
+                this_.removeLayer(this_);
+                }
             }
-        }
       ]
 });
 retPanel.doLayout(true);
@@ -439,6 +466,26 @@ var lyrsOnTree = this_.layers;
   }
 }
 
+ol.control.LayerControl.prototype.removeLayer = function(cntrl){
+var this_ =  cntrl;
+var selectedNode = this_.treePanel.getSelectionModel().getSelection();
+console.log("selectedNode[0]",selectedNode[0]);
+console.log("selectedNode length",selectedNode.length);
+  if (selectedNode.length>0){
+    if(selectedNode[0].isLeaf() === true){
+     var lyrcntrlid = selectedNode[0].get('id').split("___")[0];   
+     var lyrToRemove = this_.getTreeLyrById(lyrcntrlid);
+     this_.getMap().removeLayer(lyrToRemove);
+     this_.setMap(this_.getMap());//call the set map to populate the new data and update the panel with nodes using layers exist on map
+    } 
+  } 
+}
+
+
+
+
+
+
 
 
 /**
@@ -446,6 +493,7 @@ var lyrsOnTree = this_.layers;
  *  helper functions
  *
  */
+
 
 /**
  * check if value exist in array

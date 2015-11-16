@@ -13,11 +13,24 @@
     position:absolute;
     width:100%;
     height:100%;
+
 }
 
 .layrctlimgbtn {
     display: block;
     margin-left: auto; 
     margin-right: auto;
+}
+
+.layrctladdNew {
+background-image: url(images/lyradd.png) !important;
+}
+
+.layrctlprops {
+background-image: url(images/props.png) !important;
+}
+
+.layrctlremove {
+background-image: url(images/lyrmove.png) !important;
 }
 

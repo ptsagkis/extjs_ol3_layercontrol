@@ -10,20 +10,15 @@ Build on ol3 v3.10.1 and extjs 5.1 versions
 Version 0.1
 
 ## Supported Functionality
-<<<<<<< HEAD
-1. drag and drop within group of layers and accossiated layer ordering
-2. check box to toggle layer visibility
-3. associated icons next to layer name for loadstart, loadend, loaderror events
-4. Add and remove layers dynamically
-5. drag treepanel
-=======
+
+
 1. drag and drop within group of layers and accossiated layer ordering on map
 2. check box to toggle layer visibility
 3. associated icons next to layer name for loadstart, loadend, loaderror events
-4. Add and remove layers dynamically
+4. Add and remove layers dynamically  (working on it)
 5. icons before layer name for the legend style
 6. drag treepanel
->>>>>>> refs/remotes/origin/master
+
 
 ## Code Example
 example here
@@ -36,6 +31,10 @@ example here
 
 [with other controls](http://ptsagkis.github.io/extjs_ol3_layercontrol/example2_morecontrols.html)
 
+[switching themes](http://ptsagkis.github.io/extjs_ol3_layercontrol/example3_themes.html)
+
+[legend icons from geoserver](http://ptsagkis.github.io/extjs_ol3_layercontrol/example3.html)
+
 
 call it like so:
 
@@ -47,6 +46,7 @@ call it like so:
          width           : 250,                   //width of the tree panel
          mapdivid        : 'map',                 //div element of map
          mapconstrained  : true                   //true||false treepanel contstrained to mapdiv element 
+         hidden          : true                   //true||false treepanel should be visible or not at start up
       })
       
 and then for every layer you want to use it 
