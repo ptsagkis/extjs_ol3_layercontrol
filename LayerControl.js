@@ -7,12 +7,13 @@ ol.control.LayerControl = function(opt_options) {
 
   var options = typeof(opt_options) !=='undefined' ? opt_options : {};
   //set default values if not defined
-   options.title = typeof(options.title) !=='undefined'                   ?  options.title : 'Layer Management';
-   options.mapdivid = typeof(options.mapdivid) !=='undefined'             ?  options.mapdivid : 'map';
-   options.draggable = typeof(options.draggable) !=='undefined'           ?  options.draggable : false;
-   options.width = typeof(options.width) !=='undefined'                   ?  options.width : 250; 
-   options.mapconstrained = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true;     
-   console.log("options.target",options.target)
+   options.title            = typeof(options.title) !=='undefined'          ?  options.title          : 'Layer Management';
+   options.mapdivid         = typeof(options.mapdivid) !=='undefined'       ?  options.mapdivid       : 'map';
+   options.draggable        = typeof(options.draggable) !=='undefined'      ?  options.draggable      : false;
+   options.width            = typeof(options.width) !=='undefined'          ?  options.width          : 250; 
+   options.mapconstrained   = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true;     
+   console.log("options",options)
+   
 
   
   
@@ -25,7 +26,7 @@ ol.control.LayerControl = function(opt_options) {
   document.getElementById(options.mapdivid).appendChild(divContainerControl); 
   
   var this_ = this;
-  
+  this_.options = options;
   //set the layer moving during dragging a layer to a new position
   this_.lyrTreeNodeMooving = {};
   //set the layers associated with the map. These are all the layers not just those within then control .
@@ -61,6 +62,13 @@ ol.control.LayerControl = function(opt_options) {
 };
 ol.inherits(ol.control.LayerControl, ol.control.Control);
 
+
+/**
+ * toggle the layer control visibility
+ * on show do the ext layout for good and for bad 
+ */
+ 
+  
 ol.control.LayerControl.prototype.toggleLayerTreePanel = function(e){
 console.info("toggleLayerTreePanel");
 var this_ = this;
@@ -200,9 +208,9 @@ console.log("layer removed",e);
 
 
 /**
- *set the data object to be loaded
- *on the store of tree panel
- *and do the loading
+ * set the data object to be loaded
+ * on the store of tree panel
+ * and do the loading
  */
 ol.control.LayerControl.prototype.setPanelData = function(data){
 console.log("setting panel data")
@@ -246,24 +254,8 @@ childObjects[g] = {
   }
 }
  console.log("childObjects",childObjects);
-/**
-var panelData = new Array();
-   for (var i=0;i<data.length;i++){
-   panelData.push({
-   text       : data[i].get('lyrControlOpt').legendTitle,
-   leaf       : true,
-   valign     : "middle",
-   autoHeight : true,
-   checked    : data[i].get('visible'),
-   id         : data[i].get('lyrControlOpt').legendnodeid +"___treeid",
-   allowDrag  : true, 
-   allowDrop  : false,
-   icon       : data[i].get('lyrControlOpt').legendImgUrl
-   });
-  }
-*/
+
 var store = this_.treePanel.getStore();
-//console.log("panelData",panelData);
 var rootData = {
         expanded: true,
         allowDrag     : false, 
@@ -307,102 +299,112 @@ var store = Ext.create('Ext.data.TreeStore', {
     }
 });
 var elContstrainTo = "";
-if (opt.mapconstrained === true){
+if (opt.mapconstrained === true){ //if map constrain is true then constrain it within supplied map div
 elContstrainTo = opt.mapdivid
 }
 var retPanel = 
 Ext.create('Ext.tree.Panel', {
-renderTo: document.getElementById('laycntrlmapcont'),
-constrain:opt.mapconstrained,
-constrainTo:elContstrainTo,
-manageHeight:true,
-title: opt.title,
-id: 'ol3treepanel',
-width: opt.width,
-anchor: '100%', 
-shadow:true,
-autoScroll:true,
-store: store,
-rootVisible: false,
-draggable: opt.draggable,
-floating: true, 
-plain: true,
-closable: true,
-closeAction: 'hide',
-hidden:true,
-useArrows: true,
-columns:[
-          {
-                xtype: 'treecolumn',
-                flex:1,
-                sortable:false,
-                resizable:true,
-                menuDisabled: true,
-                dataIndex: 'text',
-                width: 200
-          },{
-                width: 55,
-                menuDisabled: true,
-                sortable:false,
-                resizable:false,
-                dataIndex: 'lyrloadingcon',
-                renderer:renderLoadingIcon,
-                align: 'center'
-          }
-        ],
-viewConfig: {
-    plugins: {
-        ptype: 'treeviewdragdrop'     
-        },
-    listeners: {    
-        beforedrop:function(node, data, overModel, dropPosition, dropHandlers) {
-        var parentBefore = data.records[0].parentNode.data.text;
-        var parentAfter = overModel.parentNode.data.text;
-        console.log("parentBefore",parentBefore);
-        console.log("parentAfter",parentAfter);
-            if (parentBefore!==parentAfter || (parentBefore==="Root" && parentAfter==="Root"))
-            {
-            dropHandlers.cancelDrop();    
-            }
-            else
-            {
+renderTo        : document.getElementById('laycntrlmapcont'),
+constrain       : opt.mapconstrained,
+constrainTo     : elContstrainTo,
+manageHeight    : true,
+title           : opt.title,
+id              : 'ol3treepanel',
+width           : opt.width,
+anchor          : '100%', 
+shadow          : true,
+autoScroll      : true,
+store           : store,
+rootVisible     : false,
+draggable       : opt.draggable,
+floating        : true, 
+plain           : true,
+closable        : true,
+closeAction     : 'hide',
+hidden          : true,
+useArrows       : true,
+hideHeaders     : true,
+columns         : [
+                    {
+                          xtype: 'treecolumn',
+                          flex:1,
+                          sortable:false,
+                          resizable:true,
+                          menuDisabled: true,
+                          dataIndex: 'text',
+                          width: 200
+                    },{
+                          width: 55,
+                          menuDisabled: true,
+                          sortable:false,
+                          resizable:false,
+                          dataIndex: 'lyrloadingcon',
+                          renderer:renderLoadingIcon,
+                          align: 'center'
+                    }
+                  ],
+viewConfig      : {
+            plugins: {
+              ptype: 'treeviewdragdrop'     
+            },
+            listeners: {    
+            beforedrop:function(node, data, overModel, dropPosition, dropHandlers) {
+            var parentBefore = data.records[0].parentNode.data.text;
+            var parentAfter = overModel.parentNode.data.text;
+            console.log("parentBefore",parentBefore);
+            console.log("parentAfter",parentAfter);
+                if (parentBefore!==parentAfter || (parentBefore==="Root" && parentAfter==="Root"))
+                {
+                dropHandlers.cancelDrop();    
+                }
+                else
+                {
+                var parentGroup = data.records[0].parentNode.data.text
+                var parentCount = getIndexOfString(this_.groupNames,parentGroup)+1;
+                var idx = Ext.getCmp('ol3treepanel').getView().indexOf(data.records[0]) - parentCount;
+                var layersCollection = this_.getMap().getLayers();
+                this_.disableLayerListeners(this_.lyrCollection);
+                this_.lyrTreeNodeMooving = layersCollection.removeAt(idx);
+                dropHandlers.processDrop();   
+                }
+            },
+            drop: function( node, data, overModel, dropPosition, eOpts){
             var parentGroup = data.records[0].parentNode.data.text
             var parentCount = getIndexOfString(this_.groupNames,parentGroup)+1;
-            var idx = Ext.getCmp('ol3treepanel').getView().indexOf(data.records[0]) - parentCount;
+            var idx = Ext.getCmp('ol3treepanel').getView().indexOf(data.records[0])- parentCount;
             var layersCollection = this_.getMap().getLayers();
-            this_.disableLayerListeners(this_.lyrCollection);
-            this_.lyrTreeNodeMooving = layersCollection.removeAt(idx);
-            dropHandlers.processDrop();   
+            layersCollection.insertAt(idx,this_.lyrTreeNodeMooving);
+            this_.lyrTreeNodeMooving = {};
+            this_.enableLayerListeners(this_.lyrCollection);
             }
+        }
+},
+listeners       : {
+        checkchange : function(node,check){
+            this_.toggleLyrVisibility(node.get('id').split("___")[0],check);
         },
-        drop: function( node, data, overModel, dropPosition, eOpts){
-        var parentGroup = data.records[0].parentNode.data.text
-        var parentCount = getIndexOfString(this_.groupNames,parentGroup)+1;
-        var idx = Ext.getCmp('ol3treepanel').getView().indexOf(data.records[0])- parentCount;
-        var layersCollection = this_.getMap().getLayers();
-        layersCollection.insertAt(idx,this_.lyrTreeNodeMooving);
-        this_.lyrTreeNodeMooving = {};
-        this_.enableLayerListeners(this_.lyrCollection);
-        }
-
-    }
+        itemcontextmenu: showLyrContextMenu
 },
-listeners : {
-    checkchange : function(node,check){
-        this_.toggleLyrVisibility(node.get('id').split("___")[0],check);
-    },
-    itemcontextmenu: showLyrContextMenu
-},
- tbar: [
-        { 
-            xtype   : 'button', 
-            id      : 'editlyrprops',
-            iconCls : 'save',
-            tooltip : 'Αποθήκευση Διάταξης Επιπέδων',
-            handler : function(){
-                alert('save.....');
+tbar            : [
+            { 
+                xtype   : 'button', 
+                id      : 'editlyrprops',
+                text    : 'properties',
+                iconCls : 'props',
+                tooltip : 'Layer Properties',
+                handler : function(){
+                    alert('show properties.....');
+                }
+            },{ 
+                xtype   : 'button', 
+                id      : 'addlyr',
+                text    : 'add new',
+                iconCls : 'addlyr',
+                tooltip : 'Add Layer',
+                handler : function(){
+                    alert('add layer.....');
+                }
             }
-        }
       ]
 });
 retPanel.doLayout(true);
