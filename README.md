@@ -31,6 +31,8 @@ example here
 
 [with other controls](http://ptsagkis.github.io/extjs_ol3_layercontrol/example2_morecontrols.html)
 
+[switching themes](http://ptsagkis.github.io/extjs_ol3_layercontrol/example3_themes.html)
+
 
 call it like so:
 
