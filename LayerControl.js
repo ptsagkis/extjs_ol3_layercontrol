@@ -11,10 +11,13 @@ ol.control.LayerControl = function(opt_options) {
    options.mapdivid         = typeof(options.mapdivid) !=='undefined'       ?  options.mapdivid       : 'map';
    options.draggable        = typeof(options.draggable) !=='undefined'      ?  options.draggable      : false;
    options.width            = typeof(options.width) !=='undefined'          ?  options.width          : 250; 
-   options.mapconstrained   = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true;     
+   options.mapconstrained   = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true; 
+   options.hidden           = typeof(options.hidden) !=='undefined'         ?  options.hidden         : true;
+   options.lang             = typeof(options.lang) !=='undefined'           ?  options.lang           : 'en';    
    console.log("options",options)
    
-
+   //initialise the tooltips extjs functionality
+   Ext.tip.QuickTipManager.init();
   
   
   var divControl = document.createElement('div');
@@ -26,15 +29,40 @@ ol.control.LayerControl = function(opt_options) {
   document.getElementById(options.mapdivid).appendChild(divContainerControl); 
   
   var this_ = this;
+  //hold the otpions to the control
   this_.options = options;
   //set the layer moving during dragging a layer to a new position
   this_.lyrTreeNodeMooving = {};
   //set the layers associated with the map. These are all the layers not just those within then control .
   //the collection populates within setMap method of the control
   this_.lyrCollection = new ol.Collection(); 
-  
+  //set the locale abbreviations
+  //you may add new language abbrevations here and then pass options.lang during control initialasiation
+  this_.langAbbrevations = {
+   en:{
+       ui : {
+        addlyrTip         : 'Add Layer',
+        removeLyrTip      : 'Remove Layer',
+        lyrPropsTip       : 'Layer Properties'
+       },
+       messasges: {
+       
+      }
+    },
+    gr:{
+       ui : {
+        addlyrTip         : 'Προσθήκη νέου',
+        removeLyrTip      : 'Διαγραφή απο τον χάρτη',
+        lyrPropsTip       : 'Ιδιότητες επιπέδου'
+       },
+       messasges: {
+       
+      }
+    }
+  }
     //creates the extjs tree panel 
   this_.treePanel = this_.createThePanel(options);
+  
     //toggle the panel. show/hide
   this_.toggleTreePanel = function(e) {
   console.info("toggling the panel");
@@ -42,17 +70,19 @@ ol.control.LayerControl = function(opt_options) {
    if (isVisble){
    this_.hideTreePanel();
    } else {
-   this_.showTreePanel(e);
-   this_.treePanel.doLayout(true);
+   this_.showTreePanel()
    }
+   this_.treePanel.doLayout(true);
   };
-    
+   //add the listeners function to the control button 
   divControl.addEventListener('click', this_.toggleTreePanel, false);
   divControl.addEventListener('touchstart', this_.toggleTreePanel, false);
 
   var element = document.createElement('div');
   element.className = 'ol-unselectable ol-layercontrol';
   element.appendChild(divControl);
+  
+  
 
   ol.control.Control.call(this, {
     element: element,
@@ -60,26 +90,10 @@ ol.control.LayerControl = function(opt_options) {
   });   
 
 };
+//and instatiate the control
 ol.inherits(ol.control.LayerControl, ol.control.Control);
 
 
-/**
- * toggle the layer control visibility
- * on show do the ext layout for good and for bad 
- */
- 
-  
-ol.control.LayerControl.prototype.toggleLayerTreePanel = function(e){
-console.info("toggleLayerTreePanel");
-var this_ = this;
-   var isVisble = this_.treePanel.isVisible();
-   if (isVisble){
-   this_.hideTreePanel();
-   } else {
-   this_.showTreePanel(e);
-   this_.treePanel.doLayout(true);  //force to layout
-   }
-}
 /**
  * 1. Asign the map to the control
  * 2. Asign the event "add","remove"  to the layers {ol.Collection} of the map
@@ -269,9 +283,11 @@ store.setRoot(rootData);
 /**
  * show the panel
  */
-ol.control.LayerControl.prototype.showTreePanel = function (e){
-if (typeof(e) !=='undefined'){
-this.treePanel.setPosition(e.clientX-260,e.clientY+50,false);
+ol.control.LayerControl.prototype.showTreePanel = function (pos){
+if (typeof(pos) !=='undefined'){
+console.log("pos",pos);
+this.treePanel.setPosition(pos.left,pos.top,false);
+//this.treePanel.setPosition(e.clientX-260,e.clientY+50,false);
 }
 this.treePanel.show();
 }
@@ -310,6 +326,9 @@ constrainTo     : elContstrainTo,
 manageHeight    : true,
 title           : opt.title,
 id              : 'ol3treepanel',
+style           : {
+    'z-index' : 99999
+},
 width           : opt.width,
 anchor          : '100%', 
 shadow          : true,
@@ -321,7 +340,7 @@ floating        : true,
 plain           : true,
 closable        : true,
 closeAction     : 'hide',
-hidden          : true,
+hidden          : opt.hidden,
 useArrows       : true,
 hideHeaders     : true,
 columns         : [
@@ -389,20 +408,26 @@ tbar            : [
             { 
                 xtype   : 'button', 
                 id      : 'editlyrprops',
-                text    : 'properties',
-                iconCls : 'props',
-                tooltip : 'Layer Properties',
+                iconCls : 'layrctlprops',
+                tooltip : this_.langAbbrevations[opt.lang].ui.lyrPropsTip,
                 handler : function(){
                     alert('show properties.....');
                 }
             },{ 
                 xtype   : 'button', 
                 id      : 'addlyr',
-                text    : 'add new',
-                iconCls : 'addlyr',
-                tooltip : 'Add Layer',
+                iconCls : 'layrctladdNew',
+                tooltip : this_.langAbbrevations[opt.lang].ui.addlyrTip,
                 handler : function(){
                     alert('add layer.....');
+                }
+            },{ 
+                xtype   : 'button', 
+                id      : 'removeLyr',
+                iconCls : 'layrctlremove',
+                tooltip : this_.langAbbrevations[opt.lang].ui.removeLyrTip,
+                handler : function(btn){
+                this_.removeLayer(this_);
                 }
             }
       ]
@@ -441,6 +466,26 @@ var lyrsOnTree = this_.layers;
   }
 }
 
+ol.control.LayerControl.prototype.removeLayer = function(cntrl){
+var this_ =  cntrl;
+var selectedNode = this_.treePanel.getSelectionModel().getSelection();
+console.log("selectedNode[0]",selectedNode[0]);
+console.log("selectedNode length",selectedNode.length);
+  if (selectedNode.length>0){
+    if(selectedNode[0].isLeaf() === true){
+     var lyrcntrlid = selectedNode[0].get('id').split("___")[0];   
+     var lyrToRemove = this_.getTreeLyrById(lyrcntrlid);
+     this_.getMap().removeLayer(lyrToRemove);
+     this_.setMap(this_.getMap());//call the set map to populate the new data and update the panel with nodes using layers exist on map
+    } 
+  } 
+}
+
+
+
+
+
+
 
 
 /**
@@ -448,6 +493,7 @@ var lyrsOnTree = this_.layers;
  *  helper functions
  *
  */
+
 
 /**
  * check if value exist in array

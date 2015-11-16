@@ -42,6 +42,7 @@ call it like so:
          width           : 250,                   //width of the tree panel
          mapdivid        : 'map',                 //div element of map
          mapconstrained  : true                   //true||false treepanel contstrained to mapdiv element 
+         hidden          : true                   //true||false treepanel should be visible or not at start up
       })
       
 and then for every layer you want to use it 
