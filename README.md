@@ -35,7 +35,7 @@ example here
 
 [legend icons from geoserver](http://ptsagkis.github.io/extjs_ol3_layercontrol/example3.html)
 
-
+[dynamic add preconfigured layers](http://ptsagkis.github.io/extjs_ol3_layercontrol/example4_dynamic_add_layer.html)
 
 your html:
 
