@@ -108,8 +108,8 @@
     
     sourceVector = new ol.source.Vector({
     loader: function (extent) {
-        //place here any actions on start loading layer
-        //document.getElementById('laodingcont').innerHTML = "<font color='orange'>start loading.....</font>";
+        //asign the loading behaviour hear using the  legendnodeid + "___loadingimg"
+        document.getElementById('wfs1'+'___loadingimg').src = 'css/images/loading.png';
         $.ajax('http://demo.opengeo.org/geoserver/wfs', {
             type: 'GET',
             data: {
@@ -123,7 +123,8 @@
         }).done(loadFeatures)
             .fail(function () {
             //place here any actions on fail loading layer
-            //document.getElementById('laodingcont').innerHTML = "<font color='red'>error loading vector layer.</font>";
+            //asign the loading behaviour hear using the  legendnodeid + "___loadingimg"
+            document.getElementById('wfs1'+'___loadingimg').src = 'css/images/no.png';
         });
     },
     strategy: ol.loadingstrategy.bbox
@@ -177,6 +178,8 @@
     function loadFeatures(response) {
     formatWFS = new ol.format.WFS(),
     sourceVector.addFeatures(formatWFS.readFeatures(response));
+    //asign the loading behaviour hear using the  legendnodeid + "___loadingimg"
+        document.getElementById('wfs1'+'___loadingimg').src = 'css/images/ok.png';
     //document.getElementById('laodingcont').innerHTML = "<font color='green'>finish loading vector layer.</font>";
     }
     }); 
