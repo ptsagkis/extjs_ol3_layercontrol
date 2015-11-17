@@ -14,31 +14,8 @@ ol.control.LayerControl = function(opt_options) {
    options.mapconstrained   = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true; 
    options.hidden           = typeof(options.hidden) !=='undefined'         ?  options.hidden         : true;
    options.lang             = typeof(options.lang) !=='undefined'           ?  options.lang           : 'en';    
-   console.log("options",options)
-   
-   //initialise the tooltips extjs functionality
-   Ext.tip.QuickTipManager.init();
-  
-  
-  var divControl = document.createElement('div');
-  divControl.innerHTML = '<img class="layrctlimgbtn" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS_Coz6FFp-dSQIOmTnSeyzK9D74enD7Tp4uE2xcyAuyOLfAqVY"</img>';   
-    
-  var divContainerControl =  document.createElement('div');
-  divContainerControl.className = "laycntrlmapcont";
-  divContainerControl.id = "laycntrlmapcont";
-  document.getElementById(options.mapdivid).appendChild(divContainerControl); 
-  
-  var this_ = this;
-  //hold the otpions to the control
-  this_.options = options;
-  //set the layer moving during dragging a layer to a new position
-  this_.lyrTreeNodeMooving = {};
-  //set the layers associated with the map. These are all the layers not just those within then control .
-  //the collection populates within setMap method of the control
-  this_.lyrCollection = new ol.Collection(); 
-  //set the locale abbreviations
-  //you may add new language abbrevations here and then pass options.lang during control initialasiation
-  this_.langAbbrevations = {
+   var this_ = this;
+   this_.langAbbrevations = {
    en:{
        ui : {
         addlyrTip         : 'Add Layer',
@@ -60,6 +37,28 @@ ol.control.LayerControl = function(opt_options) {
       }
     }
   }
+  //initialise the tooltips extjs functionality
+  Ext.tip.QuickTipManager.init();
+
+  var divControl = document.createElement('div');
+  divControl.innerHTML = '<img class="layrctlimgbtn" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS_Coz6FFp-dSQIOmTnSeyzK9D74enD7Tp4uE2xcyAuyOLfAqVY"</img>';   
+    
+  var divContainerControl =  document.createElement('div');
+  divContainerControl.className = "laycntrlmapcont";
+  divContainerControl.id = "laycntrlmapcont";
+  document.getElementById(options.mapdivid).appendChild(divContainerControl); 
+  
+  
+  //hold the otpions to the control
+  this_.options = options;
+  //set the layer moving during dragging a layer to a new position
+  this_.lyrTreeNodeMooving = {};
+  //set the layers associated with the map. These are all the layers not just those within then control .
+  //the collection populates within setMap method of the control
+  this_.lyrCollection = new ol.Collection(); 
+  //set the locale abbreviations
+  //you may add new language abbrevations here and then pass options.lang during control initialasiation
+  
     //creates the extjs tree panel 
   this_.treePanel = this_.createThePanel(options);
   
