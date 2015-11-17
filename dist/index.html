@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Extjs ol3 layercontrol by ptsagkis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Extjs ol3 layercontrol</h1>
+      <h2 class="project-tagline">Open Layers 3, adding a layer control using the extjs treepanel api</h2>
+      <a href="https://github.com/ptsagkis/extjs_ol3_layercontrol" class="btn">View on GitHub</a>
+      <a href="https://github.com/ptsagkis/extjs_ol3_layercontrol/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/ptsagkis/extjs_ol3_layercontrol/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="openlayers-3-layer-tree-panel-using-extjs-51" class="anchor" href="#openlayers-3-layer-tree-panel-using-extjs-51" aria-hidden="true"><span class="octicon octicon-link"></span></a>openlayers 3 .Layer tree panel using extjs 5.1</h1>
+
+<h2>
+<a id="synopsis" class="anchor" href="#synopsis" aria-hidden="true"><span class="octicon octicon-link"></span></a>Synopsis</h2>
+
+<p>Adding a layer control using the extjs treepanel api.</p>
+
+<p>Build on ol3 v3.10.1 and extjs 5.1 versions</p>
+
+<p>Version 0.1</p>
+
+<h2>
+<a id="supported-functionality" class="anchor" href="#supported-functionality" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported Functionality</h2>
+
+<ol>
+<li>drag and drop within group of layers and accossiated layer ordering on map</li>
+<li>check box to toggle layer visibility</li>
+<li>associated icons next to layer name for loadstart, loadend, loaderror events</li>
+<li>Add and remove layers dynamically  (working on it)</li>
+<li>icons before layer name for the legend style</li>
+<li>drag treepanel</li>
+</ol>
+
+<h2>
+<a id="code-example" class="anchor" href="#code-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Code Example</h2>
+
+<p>example here</p>
+
+<p><a href="http://ptsagkis.github.io/extjs_ol3_layercontrol/example.html">first example</a></p>
+
+<p><a href="http://ptsagkis.github.io/extjs_ol3_layercontrol/example0_minimalistic.html">mininalistic example</a></p>
+
+<p><a href="http://ptsagkis.github.io/extjs_ol3_layercontrol/example1_withoptions.html">example with options</a></p>
+
+<p><a href="http://ptsagkis.github.io/extjs_ol3_layercontrol/example2_morecontrols.html">with other controls</a></p>
+
+<p><a href="http://ptsagkis.github.io/extjs_ol3_layercontrol/example3_themes.html">switching themes</a></p>
+
+<p><a href="http://ptsagkis.github.io/extjs_ol3_layercontrol/example3.html">legend icons from geoserver</a></p>
+
+<p><a href="http://ptsagkis.github.io/extjs_ol3_layercontrol/example4_dynamic_add_layer.html">dynamic add preconfigured layers</a></p>
+
+<p>your html:</p>
+
+<pre><code>      &lt;div class='laycntrl-wrapper'&gt;
+      &lt;div id="map" style="height:50%" &gt;&lt;/div&gt;
+      &lt;/div&gt;
+</code></pre>
+
+<p>your javascript:</p>
+
+<pre><code>  new ol.control.LayerControl({
+     title           : "Layer Management",    //the title on top of the tree panel
+     draggable       : true,                  //true||false treepanel is drggable or not
+     width           : 250,                   //width of the tree panel
+     mapdivid        : 'map',                 //div element of map
+     mapconstrained  : true                   //true||false treepanel contstrained to mapdiv element 
+     hidden          : true                   //true||false treepanel should be visible or not at start up
+     lang            : 'en'                   //laguage to use for abbrevations . default is 'en'
+  })
+</code></pre>
+
+<p>and then for every layer you want to use it 
+asign an extra object {lyrControlOpt} during layer initiliasation
+like so:</p>
+
+<pre><code>  new ol.layer.Tile({  
+    title:"OSM Layer",
+    source: new ol.source.OSM(),
+    lyrControlOpt : {
+       legendGroup : 'Tile Layers',               // tree group this layer belongs to. A parent tree node will be created for each group found
+       legendnodeid: 'osmid',                     //this must be unique for every layer added
+       legendTitle : "Open Street Map",           //Title of tree node
+       legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"  //a url for the image next to title
+    }
+  }
+</code></pre>
+
+<h2>
+<a id="motivation" class="anchor" href="#motivation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Motivation</h2>
+
+<p>A short description of the motivation behind the creation and maintenance of the project. This should explain <strong>why</strong> the project exists.</p>
+
+<h2>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>you need to include the following extjs files within the header of you html page
+these are:</p>
+
+<ol>
+<li><p><a href="https://extjs.cachefly.net/ext/gpl/5.1.0/packages/ext-theme-classic/build/resources/ext-theme-classic-all-debug.css">https://extjs.cachefly.net/ext/gpl/5.1.0/packages/ext-theme-classic/build/resources/ext-theme-classic-all-debug.css</a></p></li>
+<li><p><a href="http://cdn.sencha.com/ext/gpl/5.1.0/build/ext-all-debug.js">http://cdn.sencha.com/ext/gpl/5.1.0/build/ext-all-debug.js</a></p></li>
+</ol>
+
+<p>and the load your ol3 files as usual</p>
+
+<h2>
+<a id="api-reference" class="anchor" href="#api-reference" aria-hidden="true"><span class="octicon octicon-link"></span></a>API Reference</h2>
+
+<p>Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.</p>
+
+<h2>
+<a id="tests" class="anchor" href="#tests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Tests</h2>
+
+<p>Describe and show how to run the tests with code examples.</p>
+
+<h2>
+<a id="contributors" class="anchor" href="#contributors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributors</h2>
+
+<p>Let people know how they can dive into the project, include important links to things like issue trackers, irc, twitter accounts if applicable.</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>A short snippet describing the license (MIT, Apache, etc.)</p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/ptsagkis/extjs_ol3_layercontrol">Extjs ol3 layercontrol</a> is maintained by <a href="https://github.com/ptsagkis">ptsagkis</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
