@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+  <link rel="stylesheet" id="theme1" type="text/css" href="https://extjs.cachefly.net/ext/gpl/5.1.0/packages/ext-theme-classic/build/resources/ext-theme-classic-all-debug.css"/>
+  <link rel="stylesheet" id="theme2" type="text/css" href="https://extjs.cachefly.net/ext/gpl/5.1.0/packages/ext-theme-neptune/build/resources/ext-theme-neptune-all-debug.css"/>
+  
+  <link rel="stylesheet" type="text/css" href="http://openlayers.org/en/v3.10.1/css/ol.css"/>
+  <link rel="stylesheet" type="text/css" href="css/LayerControl.css"/>
+  
+  
+  
+  <script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.1.0/build/ext-all-debug.js" ></script>
+  <script type="text/javascript" src="http://openlayers.org/en/v3.10.1/build/ol-debug.js" ></script>
+  <script type="text/javascript" src="LayerControl.js" ></script>
+  
+  <script type="text/javascript">
+  Ext.onReady(function() {
+  document.getElementById('theme1').disabled = true;
+  document.getElementById('theme2').disabled = false;
+  var lyrControl =  new ol.control.LayerControl({
+         title          : "Layers on map",
+         draggable      : true,
+         width          : 250,
+         mapdivid       : 'map',
+         mapconstrained : true ,
+         hidden         : false
+      });
+    var map = new ol.Map({
+    controls: ol.control.defaults({
+      attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+        collapsible: true
+      })
+    }).extend([
+    lyrControl  
+    ]),
+    layers: [
+      new ol.layer.Tile({  
+        title:"OSM Layer",
+        source: new ol.source.OSM(),
+        lyrControlOpt : {
+           legendGroup : 'Tile Layers',
+           legendnodeid: 'osmid',
+           legendTitle : "Open Street Map",
+           legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
+        }
+      }),
+      new ol.layer.Tile({
+      source: new ol.source.BingMaps({
+        key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
+        imagerySet: 'Aerial' 
+      }),
+      title:'Bing Layer',
+      lyrControlOpt : {
+         legendGroup : 'Tile Layers',
+         legendnodeid: 'bingid',
+         legendTitle : "Bing Layer",
+         legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
+      }
+  	}),
+    new ol.layer.Tile({
+    source: new ol.source.MapQuest({layer: 'osm'}),
+    lyrControlOpt : {
+           legendGroup  : 'Tile Layers',
+           legendnodeid : 'mqosmid',
+           legendTitle  : "MapQuest Open Street Map",
+           legendImgUrl : "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
+        }
+    }),
+    new ol.layer.Image({
+  //  extent: [-13884991, 2870341, -7455066, 6338219],
+    source: new ol.source.ImageWMS({
+      url: 'http://suite.opengeo.org/geoserver/wms',
+      params: {'LAYERS': 'opengeo:countries'},
+      serverType: 'geoserver'
+      }),
+    lyrControlOpt : {
+           legendGroup  : 'Wms Layers',
+           legendnodeid : 'wms1',
+           legendTitle  : "opengeo:countries",
+           legendImgUrl : "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
+        }
+    }),
+    new ol.layer.Tile({
+    extent: [-13884991, 2870341, -7455066, 6338219],
+    source: new ol.source.TileWMS({
+      url: 'http://suite.opengeo.org/geoserver/wms',
+      params: {'LAYERS': 'usa:states', 'TILED': true},
+      serverType: 'geoserver'
+      }),
+      lyrControlOpt : {
+           legendGroup  : 'Wms Layers',
+           legendnodeid : 'wms2',
+           legendTitle  : "usa:states",
+           legendImgUrl : "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
+        }
+    })
+    ],
+    target: 'map',
+    view: new ol.View({
+      center: [0, 0],
+      zoom: 2,
+      rotation: 0
+    })
+    });
+    
+    document.getElementById("theme_switcher").onclick = function(){
+    switchThemes();
+    
+    }
+    
+    
+    function switchThemes() {
+    console.info("switching themes")
+   var theme1 =  document.getElementById('theme1');
+   var theme2 =  document.getElementById('theme2');
+      if (theme2.disabled === true)
+      {
+      theme1.disabled = true;
+      theme2.disabled = false;
+      } else {
+      theme1.disabled = false;
+      theme2.disabled = true;
+      }
+ 
+    lyrControl.treePanel.doLayout(true)
+    }
+    
+    }); 
+    
+    
+    
+    
+    
+  </script>                 
+  <title></title>
+  </head>
+  <body>
+     
+        <button id="theme_switcher" >neptune/classic theme</button>
+        <div class='laycntrl-wrapper'>
+        <div id="map" style="width:800px;height:500px"></div>
+        </div>
+        
+
+  </body>
+</html>
+
