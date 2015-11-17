@@ -36,7 +36,15 @@ example here
 [legend icons from geoserver](http://ptsagkis.github.io/extjs_ol3_layercontrol/example3.html)
 
 
-call it like so:
+
+your html:
+
+          <div class='laycntrl-wrapper'>
+          <div id="map" style="height:50%" ></div>
+          </div>
+
+
+your javascript:
 
       
       
@@ -47,6 +55,7 @@ call it like so:
          mapdivid        : 'map',                 //div element of map
          mapconstrained  : true                   //true||false treepanel contstrained to mapdiv element 
          hidden          : true                   //true||false treepanel should be visible or not at start up
+         lang            : 'en'                   //laguage to use for abbrevations . default is 'en'
       })
       
 and then for every layer you want to use it 

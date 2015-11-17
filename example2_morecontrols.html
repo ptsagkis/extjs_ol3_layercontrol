@@ -13,33 +13,25 @@
 <script src="LayerControl.js" ></script>
 
 <style>
-.map:-moz-full-screen {
-  height: 100%;
-}
-.map:-webkit-full-screen {
-  height: 100%;
-}
-.map:fullscreen {
-  height: 100%;
-}
+
 /* position the rotate control lower than usual */
 .ol-rotate {
   top: 3em;
 }
 
 </style>
-</head>
-<body>
-
-    <div id="map" style"width:100%;height:95%;" ></div>
-
 <script>
 Ext.onReady(function() {
 var map = new ol.Map({
   controls: ol.control.defaults().extend([
     new ol.control.FullScreen(),
     new ol.control.LayerControl({
-    draggable      : true
+         title          : "Layers on map",
+         draggable      : true,
+         width          : 250,
+         mapdivid       : 'map',
+         mapconstrained : true ,
+         hidden         : false
   })
   ]),
   interactions: ol.interaction.defaults().extend([
@@ -118,5 +110,11 @@ var map = new ol.Map({
 });
 
 </script>
+</head>
+<body>
+    <div class='laycntrl-wrapper'>
+    <div id="map" style="width:100%;height:95%;" ></div>
+    </div>
+
 </body>
 </html>

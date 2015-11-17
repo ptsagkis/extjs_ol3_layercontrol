@@ -14,7 +14,7 @@ ol.control.LayerControl = function(opt_options) {
    options.mapconstrained   = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true;                   //contrain panel to map canvas
    options.hidden           = typeof(options.hidden) !=='undefined'         ?  options.hidden         : true;                   //hidden at startup or not
    options.lang             = typeof(options.lang) !=='undefined'           ?  options.lang           : 'en';                   //prefered language for the time being english and greek
-   
+   //abbrevations config
    this_.langAbbrevations = {
    en:{
        ui : {
@@ -41,11 +41,11 @@ ol.control.LayerControl = function(opt_options) {
   Ext.tip.QuickTipManager.init();
 
   var divControl = document.createElement('div');
-  divControl.innerHTML = '<img class="layrctlimgbtn" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS_Coz6FFp-dSQIOmTnSeyzK9D74enD7Tp4uE2xcyAuyOLfAqVY"</img>';   
+  divControl.innerHTML = '<img class="layrctl-imgbtn" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS_Coz6FFp-dSQIOmTnSeyzK9D74enD7Tp4uE2xcyAuyOLfAqVY"</img>';   
     
   var divContainerControl =  document.createElement('div');
-  divContainerControl.className = "laycntrlmapcont";
-  divContainerControl.id = "laycntrlmapcont";
+  divContainerControl.className = "laycntrl-mapcont";
+  divContainerControl.id = "laycntrl-mapcont";
   document.getElementById(options.mapdivid).appendChild(divContainerControl); 
   
   
@@ -208,7 +208,7 @@ console.log("disabling listeners")
  * action to take when adding a new layer on map
  */
 ol.control.LayerControl.prototype.onLayerAdd = function(e){
-console.log("layer added",e);
+console.log("layer added",e); 
 }
 /**
  * action to take when removing a layer from map
@@ -319,7 +319,7 @@ elContstrainTo = opt.mapdivid
 }
 var retPanel = 
 Ext.create('Ext.tree.Panel', {
-renderTo        : document.getElementById('laycntrlmapcont'),
+renderTo        : document.getElementById('laycntrl-mapcont'),
 constrain       : opt.mapconstrained,
 constrainTo     : elContstrainTo,
 manageHeight    : true,
@@ -407,7 +407,7 @@ tbar            : [
             { 
                 xtype   : 'button', 
                 id      : 'editlyrprops',
-                iconCls : 'layrctlprops',
+                iconCls : 'layrctl-props',
                 tooltip : this_.langAbbrevations[opt.lang].ui.lyrPropsTip,
                 handler : function(){
                     alert('show properties.....');
@@ -415,7 +415,7 @@ tbar            : [
             },{ 
                 xtype   : 'button', 
                 id      : 'addlyr',
-                iconCls : 'layrctladdNew',
+                iconCls : 'layrctl-addNew',
                 tooltip : this_.langAbbrevations[opt.lang].ui.addlyrTip,
                 handler : function(){
                     alert('add layer.....');
@@ -423,7 +423,7 @@ tbar            : [
             },{ 
                 xtype   : 'button', 
                 id      : 'removeLyr',
-                iconCls : 'layrctlremove',
+                iconCls : 'layrctl-remove',
                 tooltip : this_.langAbbrevations[opt.lang].ui.removeLyrTip,
                 handler : function(btn){
                 this_.removeLayer(this_);
@@ -464,7 +464,10 @@ var lyrsOnTree = this_.layers;
     }
   }
 }
-
+/**
+ * remove the selected layer node from panel and the map
+ * @cntrl pass the control itself
+ */
 ol.control.LayerControl.prototype.removeLayer = function(cntrl){
 var this_ =  cntrl;
 var selectedNode = this_.treePanel.getSelectionModel().getSelection();
@@ -480,6 +483,18 @@ console.log("selectedNode length",selectedNode.length);
   } 
 }
 
+ol.control.LayerControl.prototype.showLyrPropsPanel = function(cntrl){
+var this_ =  cntrl;
+var lyr =  this_.getTreeLyrById(lyrtreeid);
+var selectedNode = this_.treePanel.getSelectionModel().getSelection();
+  if (selectedNode.length>0){
+    if(selectedNode[0].isLeaf() === true){
+     var lyrcntrlid = selectedNode[0].get('id').split("___")[0];   
+     var lyrToCollectProps = this_.getTreeLyrById(lyrcntrlid);
+     
+    } 
+  } 
+}
 
 
 
@@ -492,7 +507,20 @@ console.log("selectedNode length",selectedNode.length);
  *  helper functions
  *
  */
-
+ 
+ /**
+  * supply the map and scale get back the resolution
+  * @mymap ol.Map object
+  * @scale the scale expressed as number e.g 100000 ....
+  * @returns the resolution
+  */
+ function getResolutionFromScale(mymap,scale){
+    var units = mymap.getView().getProjection().getUnits();
+    var dpi = 25.4 / 0.28;
+    var mpu = ol.proj.METERS_PER_UNIT[units];
+    var resolution = scale/(mpu * 39.37 * dpi);
+    return resolution;
+}
 
 /**
  * check if value exist in array

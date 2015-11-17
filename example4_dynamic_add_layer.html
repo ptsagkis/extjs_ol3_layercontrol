@@ -8,10 +8,10 @@
   <link rel="stylesheet" type="text/css" href="css/LayerControl.css"/>
   
   
-  
-  <script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.1.0/build/ext-all-debug.js" ></script>
-  <script type="text/javascript" src="http://openlayers.org/en/v3.10.1/build/ol-debug.js" ></script>
-  <script type="text/javascript" src="LayerControl.js" ></script>
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="http://cdn.sencha.com/ext/gpl/5.1.0/build/ext-all-debug.js" ></script>
+  <script src="http://openlayers.org/en/v3.10.1/build/ol-debug.js" ></script>
+  <script src="LayerControl.js" ></script>
   
   <script type="text/javascript">
   Ext.onReady(function() {
@@ -103,9 +103,57 @@
     })
     });
     
+    
+    
+    
+    sourceVector = new ol.source.Vector({
+    loader: function (extent) {
+        //place here any actions on start loading layer
+        //document.getElementById('laodingcont').innerHTML = "<font color='orange'>start loading.....</font>";
+        $.ajax('http://demo.opengeo.org/geoserver/wfs', {
+            type: 'GET',
+            data: {
+                service: 'WFS',
+                version: '1.1.0',
+                request: 'GetFeature',
+                typename: 'water_areas',
+                srsname: 'EPSG:3857',
+                bbox: extent.join(',') + ',EPSG:3857'
+            }
+        }).done(loadFeatures)
+            .fail(function () {
+            //place here any actions on fail loading layer
+            //document.getElementById('laodingcont').innerHTML = "<font color='red'>error loading vector layer.</font>";
+        });
+    },
+    strategy: ol.loadingstrategy.bbox
+    });
+    layerVector = new ol.layer.Vector({
+    source          : sourceVector,
+    minResolution   : getResolutionFromScale(map,100),
+    maxResolution   : getResolutionFromScale(map,1000000),
+    lyrControlOpt : {
+           legendGroup  : 'WFS layers',
+           legendnodeid : 'wfs1',
+           legendTitle  : "water areas",
+           legendImgUrl : "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
+        },
+    style: new ol.style.Style({
+        stroke: new ol.style.Stroke({
+            color: 'rgba(0, 0, 255, 1.0)',
+            width: 2
+        })
+      })
+    });
+    
+    
     document.getElementById("theme_switcher").onclick = function(){
     switchThemes();
+    }
     
+    document.getElementById("vecadd").onclick = function(){
+    map.addLayer(layerVector);
+    lyrControl.setMap(lyrControl.getMap());
     }
     
     
@@ -122,9 +170,15 @@
       theme2.disabled = true;
       }
  
-    lyrControl.treePanel.doLayout(true)
+    lyrControl.treePanel.doLayout(true);
     }
     
+    
+    function loadFeatures(response) {
+    formatWFS = new ol.format.WFS(),
+    sourceVector.addFeatures(formatWFS.readFeatures(response));
+    //document.getElementById('laodingcont').innerHTML = "<font color='green'>finish loading vector layer.</font>";
+    }
     }); 
     
     
@@ -136,10 +190,12 @@
   </head>
   <body>
      
-        <button id="theme_switcher" >neptune/classic theme</button>
         <div class='laycntrl-wrapper'>
-        <div id="map" style="width:800px;height:500px"></div>
+        <div id="map" style="width:100%;height:500px"></div>
         </div>
+        <button id="theme_switcher" >neptune/classic theme</button>
+        <button id="vecadd" >add preconfigured vector layer</button>
+        
         
 
   </body>
