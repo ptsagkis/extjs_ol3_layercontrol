@@ -1,20 +1,20 @@
-﻿/**
+/**
  * @constructor
  * @extends {ol.control.Control}
  * @param {Object=} opt_options Control options.
  */
 ol.control.LayerControl = function(opt_options) {
-
+  var this_ = this;
   var options = typeof(opt_options) !=='undefined' ? opt_options : {};
-  //set default values if not defined
-   options.title            = typeof(options.title) !=='undefined'          ?  options.title          : 'Layer Management';
-   options.mapdivid         = typeof(options.mapdivid) !=='undefined'       ?  options.mapdivid       : 'map';
-   options.draggable        = typeof(options.draggable) !=='undefined'      ?  options.draggable      : false;
-   options.width            = typeof(options.width) !=='undefined'          ?  options.width          : 250; 
-   options.mapconstrained   = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true; 
-   options.hidden           = typeof(options.hidden) !=='undefined'         ?  options.hidden         : true;
-   options.lang             = typeof(options.lang) !=='undefined'           ?  options.lang           : 'en';    
-   var this_ = this;
+  //set default values if not defined                                        //if not defined asign default values
+   options.title            = typeof(options.title) !=='undefined'          ?  options.title          : 'Layer Management';     //title on top of panel
+   options.mapdivid         = typeof(options.mapdivid) !=='undefined'       ?  options.mapdivid       : 'map';                  //div id of map
+   options.draggable        = typeof(options.draggable) !=='undefined'      ?  options.draggable      : false;                  //panel draggable or not
+   options.width            = typeof(options.width) !=='undefined'          ?  options.width          : 250;                    //panel width
+   options.mapconstrained   = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true;                   //contrain panel to map canvas
+   options.hidden           = typeof(options.hidden) !=='undefined'         ?  options.hidden         : true;                   //hidden at startup or not
+   options.lang             = typeof(options.lang) !=='undefined'           ?  options.lang           : 'en';                   //prefered language for the time being english and greek
+   
    this_.langAbbrevations = {
    en:{
        ui : {
