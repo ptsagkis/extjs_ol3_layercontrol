@@ -1,34 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en-us">
   <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <meta charset="UTF-8">
+    <title>Extjs ol3 layercontrol by ptsagkis</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
-
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <title>Extjs ol3 layercontrol by ptsagkis</title>
   </head>
-
   <body>
-    <header>
-      <div class="inner">
-        <h1>Extjs ol3 layercontrol</h1>
-        <h2>Open Layers 3, adding a layer control using the extjs treepanel api</h2>
-        <a href="https://github.com/ptsagkis/extjs_ol3_layercontrol" class="button"><small>View project on</small> GitHub</a>
-      </div>
-    </header>
+    <section class="page-header">
+      <h1 class="project-name">Extjs ol3 layercontrol</h1>
+      <h2 class="project-tagline">Open Layers 3, adding a layer control using the extjs treepanel api</h2>
+      <a href="https://github.com/ptsagkis/extjs_ol3_layercontrol" class="btn">View on GitHub</a>
+      <a href="https://github.com/ptsagkis/extjs_ol3_layercontrol/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/ptsagkis/extjs_ol3_layercontrol/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <h1>
+    <section class="main-content">
+      <h1>
 <a id="openlayers-3-layer-tree-panel-using-extjs-51" class="anchor" href="#openlayers-3-layer-tree-panel-using-extjs-51" aria-hidden="true"><span class="octicon octicon-link"></span></a>openlayers 3 .Layer tree panel using extjs 5.1</h1>
 
 <h2>
@@ -39,6 +30,18 @@
 <p>Build on ol3 v3.10.1 and extjs 5.1 versions</p>
 
 <p>Version 0.1</p>
+
+<h2>
+<a id="supported-functionality" class="anchor" href="#supported-functionality" aria-hidden="true"><span class="octicon octicon-link"></span></a>Supported Functionality</h2>
+
+<ol>
+<li>drag and drop within group of layers and accossiated layer ordering on map</li>
+<li>check box to toggle layer visibility</li>
+<li>associated icons next to layer name for loadstart, loadend, loaderror events</li>
+<li>Add and remove layers dynamically  (working on it)</li>
+<li>icons before layer name for the legend style</li>
+<li>drag treepanel</li>
+</ol>
 
 <h2>
 <a id="code-example" class="anchor" href="#code-example" aria-hidden="true"><span class="octicon octicon-link"></span></a>Code Example</h2>
@@ -53,12 +56,29 @@
 
 <p><a href="http://ptsagkis.github.io/extjs_ol3_layercontrol/example2_morecontrols.html">with other controls</a></p>
 
-<p>call it like so:</p>
+<p><a href="http://ptsagkis.github.io/extjs_ol3_layercontrol/example3_themes.html">switching themes</a></p>
+
+<p><a href="http://ptsagkis.github.io/extjs_ol3_layercontrol/example3.html">legend icons from geoserver</a></p>
+
+<p><a href="http://ptsagkis.github.io/extjs_ol3_layercontrol/example4_dynamic_add_layer.html">dynamic add preconfigured layers</a></p>
+
+<p>your html:</p>
+
+<pre><code>      &lt;div class='laycntrl-wrapper'&gt;
+      &lt;div id="map" style="height:50%" &gt;&lt;/div&gt;
+      &lt;/div&gt;
+</code></pre>
+
+<p>your javascript:</p>
 
 <pre><code>  new ol.control.LayerControl({
-     title      : "Layer Management",    //the title on top of the tree panel
-     draggable  : true,                  //true||false
-     width      : 250                    // width of the tree panel
+     title           : "Layer Management",    //the title on top of the tree panel
+     draggable       : true,                  //true||false treepanel is drggable or not
+     width           : 250,                   //width of the tree panel
+     mapdivid        : 'map',                 //div element of map
+     mapconstrained  : true                   //true||false treepanel contstrained to mapdiv element 
+     hidden          : true                   //true||false treepanel should be visible or not at start up
+     lang            : 'en'                   //laguage to use for abbrevations . default is 'en'
   })
 </code></pre>
 
@@ -73,7 +93,7 @@ like so:</p>
        legendGroup : 'Tile Layers',               // tree group this layer belongs to. A parent tree node will be created for each group found
        legendnodeid: 'osmid',                     //this must be unique for every layer added
        legendTitle : "Open Street Map",           //Title of tree node
-       legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
+       legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"  //a url for the image next to title
     }
   }
 </code></pre>
@@ -115,24 +135,14 @@ these are:</p>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
 
 <p>A short snippet describing the license (MIT, Apache, etc.)</p>
-        </section>
 
-        <aside id="sidebar">
-          <a href="https://github.com/ptsagkis/extjs_ol3_layercontrol/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/ptsagkis/extjs_ol3_layercontrol/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/ptsagkis/extjs_ol3_layercontrol">Extjs ol3 layercontrol</a> is maintained by <a href="https://github.com/ptsagkis">ptsagkis</a>.</span>
 
-          <p class="repo-owner"><a href="https://github.com/ptsagkis/extjs_ol3_layercontrol"></a> is maintained by <a href="https://github.com/ptsagkis">ptsagkis</a>.</p>
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
 
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
-    </div>
+    </section>
 
   
   </body>

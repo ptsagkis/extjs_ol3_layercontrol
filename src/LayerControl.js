@@ -1,71 +1,50 @@
-﻿/**
+/**
  * @constructor
  * @extends {ol.control.Control}
  * @param {Object=} opt_options Control options.
  */
 ol.control.LayerControl = function(opt_options) {
-
   var options = typeof(opt_options) !=='undefined' ? opt_options : {};
-  //set default values if not defined
-   options.title            = typeof(options.title) !=='undefined'          ?  options.title          : 'Layer Management';
-   options.mapdivid         = typeof(options.mapdivid) !=='undefined'       ?  options.mapdivid       : 'map';
-   options.draggable        = typeof(options.draggable) !=='undefined'      ?  options.draggable      : false;
-   options.width            = typeof(options.width) !=='undefined'          ?  options.width          : 250; 
-   options.mapconstrained   = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true; 
-   options.hidden           = typeof(options.hidden) !=='undefined'         ?  options.hidden         : true;
-   options.lang             = typeof(options.lang) !=='undefined'           ?  options.lang           : 'en';    
-   console.log("options",options)
+  //check if key exist or undefined                                       //if not defined asign the default values
+   options.title            = typeof(options.title) !=='undefined'          ?  options.title          : 'Layer Management';     //title on top of panel
+   options.mapdivid         = typeof(options.mapdivid) !=='undefined'       ?  options.mapdivid       : 'map';                  //div id of map
+   options.draggable        = typeof(options.draggable) !=='undefined'      ?  options.draggable      : false;                  //panel draggable or not
+   options.width            = typeof(options.width) !=='undefined'          ?  options.width          : 250;                    //panel width
+   options.mapconstrained   = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true;                   //contrain panel to map canvas
+   options.hidden           = typeof(options.hidden) !=='undefined'         ?  options.hidden         : true;                   //hidden at startup or not
+   options.lang             = typeof(options.lang) !=='undefined'           ?  options.lang           : 'en';                   //prefered language for the time being english and greek
    
-   //initialise the tooltips extjs functionality
-   Ext.tip.QuickTipManager.init();
-  
-  
+  //initialise the tooltips extjs functionality
+  Ext.tip.QuickTipManager.init();
+
+
   var divControl = document.createElement('div');
-  divControl.innerHTML = '<img class="layrctlimgbtn" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS_Coz6FFp-dSQIOmTnSeyzK9D74enD7Tp4uE2xcyAuyOLfAqVY"</img>';   
+  divControl.innerHTML = '<img class="layrctl-imgbtn" src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcS_Coz6FFp-dSQIOmTnSeyzK9D74enD7Tp4uE2xcyAuyOLfAqVY"</img>';   
     
   var divContainerControl =  document.createElement('div');
-  divContainerControl.className = "laycntrlmapcont";
-  divContainerControl.id = "laycntrlmapcont";
+  divContainerControl.className = "laycntrl-mapcont";
+  divContainerControl.id = "laycntrl-mapcont";
   document.getElementById(options.mapdivid).appendChild(divContainerControl); 
   
-  var this_ = this;
+  
   //hold the otpions to the control
-  this_.options = options;
-  //set the layer moving during dragging a layer to a new position
-  this_.lyrTreeNodeMooving = {};
-  //set the layers associated with the map. These are all the layers not just those within then control .
+  this.options = options; 
+  //initialise the language abbrvs   
+  this.initLCLangs();  
+  //set the layer moving during dragging a layer to a new position. 
+  this.lyrTreeNodeMooving = {};
+  //create the object to hold the layers associated with the map. 
+  //These are all the layers not just those within then control .
   //the collection populates within setMap method of the control
-  this_.lyrCollection = new ol.Collection(); 
+  this.lyrCollection = new ol.Collection(); 
   //set the locale abbreviations
   //you may add new language abbrevations here and then pass options.lang during control initialasiation
-  this_.langAbbrevations = {
-   en:{
-       ui : {
-        addlyrTip         : 'Add Layer',
-        removeLyrTip      : 'Remove Layer',
-        lyrPropsTip       : 'Layer Properties'
-       },
-       messasges: {
-       
-      }
-    },
-    gr:{
-       ui : {
-        addlyrTip         : 'Προσθήκη νέου',
-        removeLyrTip      : 'Διαγραφή απο τον χάρτη',
-        lyrPropsTip       : 'Ιδιότητες επιπέδου'
-       },
-       messasges: {
-       
-      }
-    }
-  }
-    //creates the extjs tree panel 
-  this_.treePanel = this_.createThePanel(options);
   
+    //creates the extjs tree panel 
+  this.treePanel = this.createThePanel(options);
+  var this_ = this;
     //toggle the panel. show/hide
-  this_.toggleTreePanel = function(e) {
-  console.info("toggling the panel");
+  this.toggleTreePanel = function(e) {
    var isVisble = this_.treePanel.isVisible();
    if (isVisble){
    this_.hideTreePanel();
@@ -101,19 +80,19 @@ ol.inherits(ol.control.LayerControl, ol.control.Control);
  * 4. Build the child nodes to add on tree
  */
 ol.control.LayerControl.prototype.setMap = function(map) {
-console.log("setting the map",map);
-    ol.control.Control.prototype.setMap.call(this, map);
+ol.control.Control.prototype.setMap.call(this, map);//register the map to the control
     var lyrChildArray = new Array();
-    if (map) {
-        var this_ = this;
-        this_.lyrCollection = map.getLayers();
-        this_.lyrCollection.forEach(function(layer){
+    if (map) { 
+        //set the layers exist on map to the lyrCollection property    
+        this.lyrCollection = map.getLayers();
+        //loop through them and collect those with 'lyrControlOpt' key        
+        this.lyrCollection.forEach(function(layer){
         var layerTreeConfig = layer.get('lyrControlOpt');
         
         if (typeof(layerTreeConfig) ==='undefined'){
-          console.info("layer has not lyrcontrol options and so will not be added within the control");
+          console.info("layer has not lyrcontrol options and so will not be added within the control. layer obj is-->",layer);
         } else {
-          console.log("layer source",layer.getSource());
+          //define the layer type
           var vectorType = layer instanceof ol.layer.Vector;
           var imageType = layer instanceof ol.layer.Image;
           var tileType = layer instanceof ol.layer.Tile;
@@ -170,11 +149,12 @@ console.log("setting the map",map);
         }
         
         });
-    this_.layers = lyrChildArray;
+    this.layers = lyrChildArray;
     //populate the tree panel with data 
-    this_.setPanelData(lyrChildArray);
-    //enable the listeners so control is aware on adding or removing a layer
-    this_.enableLayerListeners(this_.lyrCollection);
+    this.setPanelData(lyrChildArray);
+    //enable the listeners so control is aware on adding or removing a layer  
+    var this_ = this;    
+    this.enableLayerListeners(this_.lyrCollection);
     }
 };
 
@@ -185,7 +165,6 @@ console.log("setting the map",map);
  */
 ol.control.LayerControl.prototype.enableLayerListeners = function (layersExist){
 var this_= this;
-console.log("enabling listeners");
   //when adding a new layer on map
   layersExist.on('add',this_.onLayerAdd);
   //when moving a layer from map
@@ -198,7 +177,6 @@ console.log("enabling listeners");
 
 ol.control.LayerControl.prototype.disableLayerListeners = function (layersExist){
 var this_= this;
-console.log("disabling listeners")
   //when adding a new layer on map
   layersExist.un('add',this_.onLayerAdd);
   //when moving a layer from map
@@ -209,7 +187,7 @@ console.log("disabling listeners")
  * action to take when adding a new layer on map
  */
 ol.control.LayerControl.prototype.onLayerAdd = function(e){
-console.log("layer added",e);
+console.log("layer added",e); 
 }
 /**
  * action to take when removing a layer from map
@@ -227,18 +205,14 @@ console.log("layer removed",e);
  * and do the loading
  */
 ol.control.LayerControl.prototype.setPanelData = function(data){
-console.log("setting panel data")
-var this_ = this;
-console.log("data",data)
-console.log("this_layers",this_.layers)
+
 var groupNames = new Array(); //an array of strings for the groups
    for (var f=0;f<data.length;f++){
      if (!isInArray(data[f].get('lyrControlOpt').legendGroup,groupNames)){//check if group name allready exists
       groupNames.push(data[f].get('lyrControlOpt').legendGroup);
      }
    }
-  console.log("groupNames",groupNames);
-this_.groupNames = groupNames; 
+this.groupNames = groupNames; 
 var childObjects = new Array();
 for (var g=0;g<groupNames.length;g++){
 childObjects[g] = { 
@@ -267,9 +241,8 @@ childObjects[g] = {
      }
   }
 }
- console.log("childObjects",childObjects);
 
-var store = this_.treePanel.getStore();
+var store = this.treePanel.getStore();
 var rootData = {
         expanded: true,
         allowDrag     : false, 
@@ -277,7 +250,6 @@ var rootData = {
         children: childObjects
     }
 store.setRoot(rootData);
-
 }
 
 /**
@@ -287,7 +259,6 @@ ol.control.LayerControl.prototype.showTreePanel = function (pos){
 if (typeof(pos) !=='undefined'){
 console.log("pos",pos);
 this.treePanel.setPosition(pos.left,pos.top,false);
-//this.treePanel.setPosition(e.clientX-260,e.clientY+50,false);
 }
 this.treePanel.show();
 }
@@ -306,7 +277,6 @@ this.treePanel.hide();
  *@returns the panel itself {Ext.tree.Panel}
  */
 ol.control.LayerControl.prototype.createThePanel = function (opt){
-console.log("opt",opt)
 var this_ = this;
 var store = Ext.create('Ext.data.TreeStore', {
     root: {
@@ -320,7 +290,7 @@ elContstrainTo = opt.mapdivid
 }
 var retPanel = 
 Ext.create('Ext.tree.Panel', {
-renderTo        : document.getElementById('laycntrlmapcont'),
+renderTo        : document.getElementById('laycntrl-mapcont'),
 constrain       : opt.mapconstrained,
 constrainTo     : elContstrainTo,
 manageHeight    : true,
@@ -370,8 +340,6 @@ viewConfig      : {
             beforedrop:function(node, data, overModel, dropPosition, dropHandlers) {
             var parentBefore = data.records[0].parentNode.data.text;
             var parentAfter = overModel.parentNode.data.text;
-            console.log("parentBefore",parentBefore);
-            console.log("parentAfter",parentAfter);
                 if (parentBefore!==parentAfter || (parentBefore==="Root" && parentAfter==="Root"))
                 {
                 dropHandlers.cancelDrop();    
@@ -408,7 +376,7 @@ tbar            : [
             { 
                 xtype   : 'button', 
                 id      : 'editlyrprops',
-                iconCls : 'layrctlprops',
+                iconCls : 'layrctl-props',
                 tooltip : this_.langAbbrevations[opt.lang].ui.lyrPropsTip,
                 handler : function(){
                     alert('show properties.....');
@@ -416,7 +384,7 @@ tbar            : [
             },{ 
                 xtype   : 'button', 
                 id      : 'addlyr',
-                iconCls : 'layrctladdNew',
+                iconCls : 'layrctl-addNew',
                 tooltip : this_.langAbbrevations[opt.lang].ui.addlyrTip,
                 handler : function(){
                     alert('add layer.....');
@@ -424,10 +392,10 @@ tbar            : [
             },{ 
                 xtype   : 'button', 
                 id      : 'removeLyr',
-                iconCls : 'layrctlremove',
+                iconCls : 'layrctl-remove',
                 tooltip : this_.langAbbrevations[opt.lang].ui.removeLyrTip,
                 handler : function(btn){
-                this_.removeLayer(this_);
+                this_.removeLayer();
                 }
             }
       ]
@@ -444,9 +412,7 @@ return retPanel;
 
 ol.control.LayerControl.prototype.toggleLyrVisibility = function(lytreerid,vis)
 {
-var this_ = this;
-var layer = this_.getTreeLyrById(lytreerid); 
-console.log("setting visibility :"+vis+" for layer",layer)
+var layer = this.getTreeLyrById(lytreerid); 
 layer.setVisible(vis);
 }
 
@@ -456,8 +422,7 @@ layer.setVisible(vis);
  *get back the ol.layer object
  */
 ol.control.LayerControl.prototype.getTreeLyrById = function(lyrtreeid){
-var this_ = this;
-var lyrsOnTree = this_.layers;
+var lyrsOnTree = this.layers;
   for (var i=0;i<lyrsOnTree.length;i++){
   var lyrTreeID = lyrsOnTree[i].get('lyrControlOpt').legendnodeid;
     if (lyrTreeID === lyrtreeid) {
@@ -465,22 +430,34 @@ var lyrsOnTree = this_.layers;
     }
   }
 }
-
-ol.control.LayerControl.prototype.removeLayer = function(cntrl){
-var this_ =  cntrl;
-var selectedNode = this_.treePanel.getSelectionModel().getSelection();
-console.log("selectedNode[0]",selectedNode[0]);
-console.log("selectedNode length",selectedNode.length);
+/**
+ * remove the selected layer node from panel and the map
+ * @cntrl pass the control itself
+ */
+ol.control.LayerControl.prototype.removeLayer = function(){
+var selectedNode = this.treePanel.getSelectionModel().getSelection();
   if (selectedNode.length>0){
     if(selectedNode[0].isLeaf() === true){
      var lyrcntrlid = selectedNode[0].get('id').split("___")[0];   
-     var lyrToRemove = this_.getTreeLyrById(lyrcntrlid);
-     this_.getMap().removeLayer(lyrToRemove);
-     this_.setMap(this_.getMap());//call the set map to populate the new data and update the panel with nodes using layers exist on map
+     var lyrToRemove = this.getTreeLyrById(lyrcntrlid);
+     this.getMap().removeLayer(lyrToRemove);
+     this.setMap(this.getMap());//call the set map to populate the new data and update the panel with nodes using layers exist on map
     } 
   } 
 }
 
+ol.control.LayerControl.prototype.showLyrPropsPanel = function(cntrl){
+var this_ =  cntrl;
+var lyr =  this_.getTreeLyrById(lyrtreeid);
+var selectedNode = this_.treePanel.getSelectionModel().getSelection();
+  if (selectedNode.length>0){
+    if(selectedNode[0].isLeaf() === true){
+     var lyrcntrlid = selectedNode[0].get('id').split("___")[0];   
+     var lyrToCollectProps = this_.getTreeLyrById(lyrcntrlid);
+     
+    } 
+  } 
+}
 
 
 
@@ -493,7 +470,20 @@ console.log("selectedNode length",selectedNode.length);
  *  helper functions
  *
  */
-
+ 
+ /**
+  * supply the map and scale get back the resolution
+  * @mymap ol.Map object
+  * @scale the scale expressed as number e.g 100000 ....
+  * @returns the resolution
+  */
+ function getResolutionFromScale(mymap,scale){
+    var units = mymap.getView().getProjection().getUnits();
+    var dpi = 25.4 / 0.28;
+    var mpu = ol.proj.METERS_PER_UNIT[units];
+    var resolution = scale/(mpu * 39.37 * dpi);
+    return resolution;
+}
 
 /**
  * check if value exist in array
