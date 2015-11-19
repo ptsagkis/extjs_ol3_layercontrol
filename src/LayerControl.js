@@ -15,8 +15,8 @@ ol.control.LayerControl = function(opt_options) {
    options.lang             = typeof(options.lang) !=='undefined'             ?  options.lang              : 'en';                   //prefered language for the time being english and greek
    options.capabilitiesURLs = typeof(options.capabilitiesURLs) !=='undefined' ?  options.capabilitiesURLs  : [
    //"http://giswebservices.massgis.state.ma.us/geoserver/wms?request=GetCapabilities&service=WMS&version=1.1.1"
-   "examples_data/ogcsample1.xml",
-   "examples_data/ogcsample2.xml"
+   "http://ptsagkis.github.io/extjs_ol3_layercontrol/examples_data/ogcsample1.xml",
+   "http://ptsagkis.github.io/extjs_ol3_layercontrol/examples_data/ogcsample2.xml"
    ];
   //initialise the tooltips extjs functionality
   Ext.tip.QuickTipManager.init();
@@ -458,7 +458,7 @@ ol.control.LayerControl.prototype.showNewLayerPanel = function(btn){
 var this_ = this; //get it ready to be passed on listener functions
 var urlsArray = this.options.capabilitiesURLs;
 var capabJsonDocs = new Array();
-Ext.getCmp('ol3treepanel').setLoading(true);
+this.treePanel.setLoading(true);
   for (var i=0;i<urlsArray.length;i++){
       Ext.Ajax.request({
           url     : urlsArray[i],
@@ -546,7 +546,7 @@ Ext.create('Ext.window.Window', {
     renderTo        : document.getElementById(this.options.mapdivid)
 }).show();
 
-Ext.getCmp('ol3treepanel').setLoading(false);  
+this.treePanel.setLoading(false);  
 }
 /**
  * action when button pressed to add the selected layer
@@ -569,11 +569,14 @@ var selectedNode = Ext.getCmp('onlinelyrspanel').getSelectionModel().getSelectio
     });
     this.getMap().addLayer(myNewLyr);
     this.setMap(this.getMap());
-    
     }
   }
 }
 
+
+ol.control.LayerControl.prototype.attachNewOnlineSource = function(){
+
+}
 
 ol.control.LayerControl.prototype.showLyrPropsPanel = function(){
 var this_ =  cntrl;
