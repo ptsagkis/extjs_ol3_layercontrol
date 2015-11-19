@@ -548,7 +548,9 @@ Ext.create('Ext.window.Window', {
 
 Ext.getCmp('ol3treepanel').setLoading(false);  
 }
-
+/**
+ * action when button pressed to add the selected layer
+ */
 ol.control.LayerControl.prototype.addOnlineLyrOnMap = function(){
 var selectedNode = Ext.getCmp('onlinelyrspanel').getSelectionModel().getSelection();
   if (selectedNode.length>0){
