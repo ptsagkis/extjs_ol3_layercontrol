@@ -6,14 +6,17 @@
 ol.control.LayerControl = function(opt_options) {
   var options = typeof(opt_options) !=='undefined' ? opt_options : {};
   //check if key exist or undefined                                       //if not defined asign the default values
-   options.title            = typeof(options.title) !=='undefined'          ?  options.title          : 'Layer Management';     //title on top of panel
-   options.mapdivid         = typeof(options.mapdivid) !=='undefined'       ?  options.mapdivid       : 'map';                  //div id of map
-   options.draggable        = typeof(options.draggable) !=='undefined'      ?  options.draggable      : false;                  //panel draggable or not
-   options.width            = typeof(options.width) !=='undefined'          ?  options.width          : 250;                    //panel width
-   options.mapconstrained   = typeof(options.mapconstrained) !=='undefined' ?  options.mapconstrained : true;                   //contrain panel to map canvas
-   options.hidden           = typeof(options.hidden) !=='undefined'         ?  options.hidden         : true;                   //hidden at startup or not
-   options.lang             = typeof(options.lang) !=='undefined'           ?  options.lang           : 'en';                   //prefered language for the time being english and greek
-   
+   options.title            = typeof(options.title) !=='undefined'            ?  options.title             : 'Layer Management';     //title on top of panel
+   options.mapdivid         = typeof(options.mapdivid) !=='undefined'         ?  options.mapdivid          : 'map';                  //div id of map
+   options.draggable        = typeof(options.draggable) !=='undefined'        ?  options.draggable         : false;                  //panel draggable or not
+   options.width            = typeof(options.width) !=='undefined'            ?  options.width             : 250;                    //panel width
+   options.mapconstrained   = typeof(options.mapconstrained) !=='undefined'   ?  options.mapconstrained    : true;                   //contrain panel to map canvas
+   options.hidden           = typeof(options.hidden) !=='undefined'           ?  options.hidden            : true;                   //hidden at startup or not
+   options.lang             = typeof(options.lang) !=='undefined'             ?  options.lang              : 'en';                   //prefered language for the time being english and greek
+   options.capabilitiesURLs = typeof(options.capabilitiesURLs) !=='undefined' ?  options.capabilitiesURLs  : [
+   //"http://giswebservices.massgis.state.ma.us/geoserver/wms?request=GetCapabilities&service=WMS&version=1.1.1"
+   "examples_data/getcapabilities_1.3.0.xml"
+   ];
   //initialise the tooltips extjs functionality
   Ext.tip.QuickTipManager.init();
 
@@ -387,7 +390,7 @@ tbar            : [
                 iconCls : 'layrctl-addNew',
                 tooltip : this_.langAbbrevations[opt.lang].ui.addlyrTip,
                 handler : function(){
-                    alert('add layer.....');
+                    this_.addNewLayer();
                 }
             },{ 
                 xtype   : 'button', 
@@ -395,7 +398,7 @@ tbar            : [
                 iconCls : 'layrctl-remove',
                 tooltip : this_.langAbbrevations[opt.lang].ui.removeLyrTip,
                 handler : function(btn){
-                this_.removeLayer();
+                    this_.removeLayer();
                 }
             }
       ]
@@ -446,7 +449,25 @@ var selectedNode = this.treePanel.getSelectionModel().getSelection();
   } 
 }
 
-ol.control.LayerControl.prototype.showLyrPropsPanel = function(cntrl){
+ol.control.LayerControl.prototype.addNewLayer = function(){
+var urlsArray = this.options.capabilitiesURLs;
+  for (var i=0;i<urlsArray.length;i++){
+       console.log("urlsArray",urlsArray);
+            Ext.Ajax.request({
+                url     : urlsArray[i],
+                method  : 'GET',  
+                success: function(response) {
+                console.log("response",response);
+                    var parser = new ol.format.WMSCapabilities();
+                    var result = parser.read(response);
+                   // console.log(JSON.stringify(result, null, 2));
+                }
+            });
+  }
+}
+
+
+ol.control.LayerControl.prototype.showLyrPropsPanel = function(){
 var this_ =  cntrl;
 var lyr =  this_.getTreeLyrById(lyrtreeid);
 var selectedNode = this_.treePanel.getSelectionModel().getSelection();
