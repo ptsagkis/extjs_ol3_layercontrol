@@ -7,7 +7,9 @@ this.langAbbrevations = {
        ui : {
         addlyrTip         : 'Add Layer',
         removeLyrTip      : 'Remove Layer',
-        lyrPropsTip       : 'Layer Properties'
+        lyrPropsTip       : 'Layer Properties',
+        wintitle1         : 'Add layers from online sources',
+        addLyrBtn         : 'Add Selected Layer'
        },
        messasges: {
        
@@ -17,7 +19,9 @@ this.langAbbrevations = {
        ui : {
         addlyrTip         : 'Προσθήκη νέου',
         removeLyrTip      : 'Διαγραφή απο τον χάρτη',
-        lyrPropsTip       : 'Ιδιότητες επιπέδου'
+        lyrPropsTip       : 'Ιδιότητες επιπέδου',
+        wintitle1         : 'Προσθήκη επιπέδων απο online πηγές' ,
+        addLyrBtn         : 'Προσθήκη επιλεγμένου'
        },
        messasges: {
        

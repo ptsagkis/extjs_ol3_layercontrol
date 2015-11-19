@@ -15,7 +15,8 @@ ol.control.LayerControl = function(opt_options) {
    options.lang             = typeof(options.lang) !=='undefined'             ?  options.lang              : 'en';                   //prefered language for the time being english and greek
    options.capabilitiesURLs = typeof(options.capabilitiesURLs) !=='undefined' ?  options.capabilitiesURLs  : [
    //"http://giswebservices.massgis.state.ma.us/geoserver/wms?request=GetCapabilities&service=WMS&version=1.1.1"
-   "examples_data/getcapabilities_1.3.0.xml"
+   "examples_data/ogcsample1.xml",
+   "examples_data/ogcsample2.xml"
    ];
   //initialise the tooltips extjs functionality
   Ext.tip.QuickTipManager.init();
@@ -247,7 +248,7 @@ childObjects[g] = {
 
 var store = this.treePanel.getStore();
 var rootData = {
-        expanded: true,
+        expanded      : true,
         allowDrag     : false, 
         allowDrop     : true, 
         children: childObjects
@@ -390,7 +391,7 @@ tbar            : [
                 iconCls : 'layrctl-addNew',
                 tooltip : this_.langAbbrevations[opt.lang].ui.addlyrTip,
                 handler : function(){
-                    this_.addNewLayer();
+                    this_.showNewLayerPanel();
                 }
             },{ 
                 xtype   : 'button', 
@@ -449,20 +450,125 @@ var selectedNode = this.treePanel.getSelectionModel().getSelection();
   } 
 }
 
-ol.control.LayerControl.prototype.addNewLayer = function(){
+
+/**
+ * use the capabilities urls array provided during configuration
+ */
+ol.control.LayerControl.prototype.showNewLayerPanel = function(btn){
+var this_ = this; //get it ready to be passed on listener functions
 var urlsArray = this.options.capabilitiesURLs;
+var capabJsonDocs = new Array();
+Ext.getCmp('ol3treepanel').setLoading(true);
   for (var i=0;i<urlsArray.length;i++){
-       console.log("urlsArray",urlsArray);
-            Ext.Ajax.request({
-                url     : urlsArray[i],
-                method  : 'GET',  
-                success: function(response) {
-                console.log("response",response);
-                    var parser = new ol.format.WMSCapabilities();
-                    var result = parser.read(response);
-                   // console.log(JSON.stringify(result, null, 2));
-                }
-            });
+      Ext.Ajax.request({
+          url     : urlsArray[i],
+          method  : 'GET', 
+          async   : false, 
+          success: function(response) {
+              var parser = new ol.format.WMSCapabilities();
+              capabJsonDocs.push(parser.read(response.responseXML));
+              console.log("capabJsonDocs",capabJsonDocs)
+          }
+      });
+  }
+var childObjects = new Array();
+for (var g=0;g<capabJsonDocs.length;g++){
+childObjects[g] = { 
+      text          : capabJsonDocs[g].Service.Title, 
+      expanded      : false, 
+      expandable    : true, 
+      allowDrag     : true, 
+      allowDrop     : true, 
+      children      : [],
+      lyrloadingcon : ''
+  };
+var availableLyrs = capabJsonDocs[g].Capability.Layer.Layer  
+  for (var s=0;s<availableLyrs.length;s++){
+  var uuid = generateUUID();
+     childObjects[g].children.push({
+       text       : availableLyrs[s].Title,
+       sname      : availableLyrs[s].Name,
+       onlineURL  : capabJsonDocs[g].Capability.Request.GetMap.DCPType[0].HTTP.Get.OnlineResource,
+       leaf       : true,
+       valign     : "middle",
+       autoHeight : true,
+       checked    : true,
+       uuid       : uuid,
+       group      : capabJsonDocs[g].Service.Title,
+       allowDrag  : true, 
+       allowDrop  : false,
+       icon       : capabJsonDocs[g].Capability.Request.GetMap.DCPType[0].HTTP.Get.OnlineResource +
+                    "REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=16&HEIGHT=16&LAYER="+ availableLyrs[s].Name
+     })
+  }
+}
+
+var rootData = {
+        expanded      : true,
+        allowDrag     : false, 
+        allowDrop     : true, 
+        children      : childObjects
+    }
+var store = Ext.create('Ext.data.TreeStore', {
+    root  : rootData
+});
+
+var thePanel = Ext.create('Ext.tree.Panel', {
+    width        : 200,
+    height       : 150,
+    store        : store,
+    rootVisible  : false,
+    id           : 'onlinelyrspanel'
+});
+
+Ext.create('Ext.window.Window', {
+    title           : this.langAbbrevations[this_.options.lang].ui.wintitle1,
+    height          : 200,
+    width           : 400,
+    layout          : 'fit',
+    modal           : true,
+    items           : thePanel,
+    draggable       : true,
+    closable        : true,
+    resizable       : true,
+    plain           : true,
+    border          : true,
+    autoScroll      : true,
+    buttonAlign     : 'center',
+    buttons         : [
+      {
+      text    :this_.langAbbrevations[this_.options.lang].ui.addLyrBtn,
+      handler : function(){
+        this_.addOnlineLyrOnMap();
+        }
+      }
+    ],
+    renderTo        : document.getElementById(this.options.mapdivid)
+}).show();
+
+Ext.getCmp('ol3treepanel').setLoading(false);  
+}
+
+ol.control.LayerControl.prototype.addOnlineLyrOnMap = function(){
+var selectedNode = Ext.getCmp('onlinelyrspanel').getSelectionModel().getSelection();
+  if (selectedNode.length>0){
+    if(selectedNode[0].isLeaf() === true){
+    var myNewLyr = new ol.layer.Image({
+    source: new ol.source.ImageWMS({
+      url: selectedNode[0].get('onlineURL'),
+      params: {'LAYERS': selectedNode[0].get('sname')},
+      }),
+    lyrControlOpt : {
+           legendGroup  : selectedNode[0].get('group'),
+           legendnodeid : selectedNode[0].get('uuid'),
+           legendTitle  : selectedNode[0].get('text'),
+           legendImgUrl : selectedNode[0].get('icon')
+        }
+    });
+    this.getMap().addLayer(myNewLyr);
+    this.setMap(this.getMap());
+    
+    }
   }
 }
 
@@ -551,6 +657,22 @@ function renderLoadingIcon(value,metaData,record ) {
     {
     return '';    
     }
+}
+
+/**
+ * function to create unique - random ids
+ */
+function generateUUID(){
+    var d = new Date().getTime();
+    if(window.performance && typeof window.performance.now === "function"){
+        d += performance.now();; //use high-precision timer if available
+    }
+    var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = (d + Math.random()*16)%16 | 0;
+        d = Math.floor(d/16);
+        return (c=='x' ? r : (r&0x3|0x8)).toString(16);
+    });
+    return uuid;
 }
 
 /**
