@@ -15,7 +15,8 @@ ol.control.LayerControl = function(opt_options) {
    options.lang             = typeof(options.lang) !=='undefined'             ?  options.lang              : 'en';                   //prefered language for the time being english and greek
    options.capabilitiesURLs = typeof(options.capabilitiesURLs) !=='undefined' ?  options.capabilitiesURLs  : [
    "examples_data/ogcsample1.xml",
-   "examples_data/ogcsample2.xml"
+   "examples_data/ogcsample2.xml",
+   "examples_data/ogcsample3.xml"
    ];
   //initialise the tooltips extjs functionality
   Ext.tip.QuickTipManager.init();
@@ -491,7 +492,6 @@ var availableLyrs = capabJsonDocs[g].Capability.Layer.Layer
        leaf       : true,
        valign     : "middle",
        autoHeight : true,
-       checked    : true,
        uuid       : uuid,
        group      : capabJsonDocs[g].Service.Title,
        allowDrag  : true, 
