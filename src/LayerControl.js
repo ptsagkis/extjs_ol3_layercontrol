@@ -14,9 +14,8 @@ ol.control.LayerControl = function(opt_options) {
    options.hidden           = typeof(options.hidden) !=='undefined'           ?  options.hidden            : true;                   //hidden at startup or not
    options.lang             = typeof(options.lang) !=='undefined'             ?  options.lang              : 'en';                   //prefered language for the time being english and greek
    options.capabilitiesURLs = typeof(options.capabilitiesURLs) !=='undefined' ?  options.capabilitiesURLs  : [
-   //"http://giswebservices.massgis.state.ma.us/geoserver/wms?request=GetCapabilities&service=WMS&version=1.1.1"
-   "http://ptsagkis.github.io/extjs_ol3_layercontrol/examples_data/ogcsample1.xml",
-   "http://ptsagkis.github.io/extjs_ol3_layercontrol/examples_data/ogcsample2.xml"
+   "examples_data/ogcsample1.xml",
+   "examples_data/ogcsample2.xml"
    ];
   //initialise the tooltips extjs functionality
   Ext.tip.QuickTipManager.init();
