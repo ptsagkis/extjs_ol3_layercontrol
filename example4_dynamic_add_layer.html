@@ -4,7 +4,7 @@
   <link rel="stylesheet" id="theme1" type="text/css" href="https://extjs.cachefly.net/ext/gpl/5.1.0/packages/ext-theme-classic/build/resources/ext-theme-classic-all-debug.css"/>
   <link rel="stylesheet" id="theme2" type="text/css" href="https://extjs.cachefly.net/ext/gpl/5.1.0/packages/ext-theme-neptune/build/resources/ext-theme-neptune-all-debug.css"/>
   
-  <link rel="stylesheet" type="text/css" href="http://openlayers.org/en/v3.10.1/css/ol.css"/>
+  <link rel="stylesheet" type="text/css" href="http://openlayers.org/en/v3.11.1/css/ol.css"/>
   <link rel="stylesheet" type="text/css" href="css/LayerControl.css"/>
   
   
@@ -21,12 +21,16 @@
   document.getElementById('theme1').disabled = true;
   document.getElementById('theme2').disabled = false;
   var lyrControl =  new ol.control.LayerControl({
-         title          : "Layers on map",
-         draggable      : true,
-         width          : 250,
-         mapdivid       : 'map',
-         mapconstrained : true ,
-         hidden         : false
+         title            : "Layers on map",
+         draggable        : true,
+         width            : 250,
+         mapdivid         : 'map',
+         mapconstrained   : false ,
+         hidden           : false , 
+         lang             : 'en',
+         capabilitiesURLs : [
+         'https://gist.github.com/ptsagkis/ef056b627168fc34e1c4'
+         ]
       });
     var map = new ol.Map({
     controls: ol.control.defaults({
