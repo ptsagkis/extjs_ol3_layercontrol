@@ -461,10 +461,8 @@ this.treePanel.setLoading(true);
   for (var i=0;i<urlsArray.length;i++){
       Ext.Ajax.request({
           url     : urlsArray[i],
-          method  : 'POST', 
-          async   : false,
-          useDefaultXhrHeader: false,
-          cors: true, 
+          method  : 'GET', 
+          async   : false, 
           success: function(response) {
               var parser = new ol.format.WMSCapabilities();
               capabJsonDocs.push(parser.read(response.responseXML));
