@@ -542,7 +542,7 @@ Ext.create('Ext.window.Window', {
         }
       }
     ],
-    renderTo        : document.getElementById(this.options.mapdivid)
+    renderTo        : document.body//document.getElementById(this.options.mapdivid)
 }).show();
 
 this.treePanel.setLoading(false);  
