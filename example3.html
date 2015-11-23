@@ -2,7 +2,7 @@
 <html>
   <head>
   <link rel="stylesheet" type="text/css" href="https://extjs.cachefly.net/ext/gpl/5.1.0/packages/ext-theme-classic/build/resources/ext-theme-classic-all-debug.css"/>
-  <link rel="stylesheet" type="text/css" href="http://openlayers.org/en/v3.10.1/css/ol.css"/>
+  <link rel="stylesheet" type="text/css" href="http://openlayers.org/en/v3.11.2/css/ol.css"/>
   <link rel="stylesheet" type="text/css" href="css/LayerControl.css"/>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
   <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
@@ -10,7 +10,7 @@
   
   
   <script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.1.0/build/ext-all-debug.js" ></script>
-  <script type="text/javascript" src="http://openlayers.org/en/v3.10.1/build/ol-debug.js" ></script>
+  <script type="text/javascript" src="http://openlayers.org/en/v3.11.2/build/ol-debug.js" ></script>
   <script type="text/javascript" src="src/LayerControl.js" ></script>
   <script type="text/javascript" src="src/LayerControlLang.js" ></script>
   
@@ -124,6 +124,28 @@
     <div class='laycntrl-wrapper'>
     <div id="map" style="height:50%" ></div>
     </div>
+<div>
+<b>passing lang config as "gr"</b>
+<div style="background: #ffffff; overflow:auto;width:auto;border:solid gray;border-width:.1em .1em .1em .8em;padding:.2em .6em;"><table><tr><td><pre style="margin: 0; line-height: 125%">1
+2
+3
+4
+5
+6
+7
+8
+9</pre></td><td><pre style="margin: 0; line-height: 125%"><span style="color: #008800; font-weight: bold">var</span> lyrControl <span style="color: #333333">=</span> <span style="color: #008800; font-weight: bold">new</span> ol.control.LayerControl({  
+      title           <span style="color: #333333">:</span> <span style="background-color: #fff0f0">&quot;Layers on map&quot;</span>,  
+      draggable       <span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">true</span>,  
+      width           <span style="color: #333333">:</span> <span style="color: #0000DD; font-weight: bold">250</span>,  
+      mapdivid        <span style="color: #333333">:</span> <span style="background-color: #fff0f0">&#39;map&#39;</span>,  
+      mapconstrained  <span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">false</span> ,  
+      hidden          <span style="color: #333333">:</span> <span style="color: #008800; font-weight: bold">false</span>,  
+      lang            <span style="color: #333333">:</span> <span style="background-color: #fff0f0">&#39;gr&#39;</span>  
+    });
+</pre></td></tr></table></div>
+
+</div>
 
   </body>
 </html>
