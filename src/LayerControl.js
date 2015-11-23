@@ -374,7 +374,9 @@ listeners       : {
         checkchange : function(node,check){
             this_.toggleLyrVisibility(node.get('id').split("___")[0],check);
         },
-        itemcontextmenu: showLyrContextMenu
+        itemcontextmenu: function(view, record, item, index, e, eOpts){
+          this_.showLyrContextMenu(view, record, item, index, e, eOpts, this_);
+        }
 },
 tbar            : [
             { 
@@ -522,7 +524,7 @@ var thePanel = Ext.create('Ext.tree.Panel', {
 
 Ext.create('Ext.window.Window', {
     title           : this.langAbbrevations[this_.options.lang].ui.wintitle1,
-    height          : 200,
+    height          : 400,
     width           : 400,
     layout          : 'fit',
     modal           : true,
@@ -573,9 +575,44 @@ var selectedNode = Ext.getCmp('onlinelyrspanel').getSelectionModel().getSelectio
 }
 
 
-ol.control.LayerControl.prototype.attachNewOnlineSource = function(){
+/**
+ * right click context menu
+ * on each layer to get and set the opacity slider
+ */
+ol.control.LayerControl.prototype.showLyrContextMenu = function (view, record, item, index, event, eOpts, cntrl){
+event.stopEvent();
+var lyrid = record.get('id').split('___treeid')[0];
+var lyr = cntrl.getTreeLyrById(lyrid);
+var curOpacity = lyr.getOpacity()*100;
+if (typeof(Ext.getCmp("sliderOpacidad"))!=='undefined'){
+Ext.getCmp("sliderOpacidad").destroy();
+}
+      if (record.data.leaf != false) {
+            slider = Ext.create('Ext.slider.Single', {
+                id          : 'sliderOpacidad',
+                hideLabel   : false,
+                floating    : true,
+                width       : 200,
+                minValue    : 0,
+                maxValue    : 100,
+                value       : curOpacity,
+                listeners   : {
+                    change: function (newValue, thumb, eOpts ){
+                        lyr.setOpacity(thumb/100);
+                    },
+                    blur    : function() {
+                        slider.setVisible(false);
+
+                    }
+                }
+            });
+            slider.showBy(item, 'tl-tl', [event.getX() - view.getX(), 12]);
+        }
+        
 
 }
+
+
 
 ol.control.LayerControl.prototype.showLyrPropsPanel = function(){
 var this_ =  cntrl;
@@ -679,10 +716,4 @@ function generateUUID(){
     return uuid;
 }
 
-/**
- * right click context menu
- * on each layer
- */
-function showLyrContextMenu(){
-alert("context menu here")
-}
+
