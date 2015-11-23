@@ -37,6 +37,8 @@ example here
 
 [dynamic add preconfigured layers](http://ptsagkis.github.io/extjs_ol3_layercontrol/example4_dynamic_add_layer.html)
 
+[use an extjs layout for best UI experince](http://ptsagkis.github.io/extjs_ol3_layercontrol/example5_extjslayout.html)
+
 your html:
 
           <div class='laycntrl-wrapper'>
