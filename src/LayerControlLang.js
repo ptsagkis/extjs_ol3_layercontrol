@@ -1,4 +1,4 @@
-//abbrevations config
+﻿//abbrevations config
 //set the locale abbreviations
 //you may add new language abbrevations here and then pass options.lang during control initialasiation
 ol.control.LayerControl.prototype.initLCLangs = function() {
