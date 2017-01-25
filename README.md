@@ -6,6 +6,7 @@
 Adding a layer control using the extjs treepanel api.
 
 Build on ol3 v3.10.1 and extjs 5.1 versions
+but also works with latest openlayers v3.20.x
 
 Version 0.1
 
@@ -38,6 +39,8 @@ example here
 [dynamic add preconfigured layers](http://ptsagkis.github.io/extjs_ol3_layercontrol/example4_dynamic_add_layer.html)
 
 [use an extjs layout for best UI experince](http://ptsagkis.github.io/extjs_ol3_layercontrol/example5_extjslayout.html)
+
+[change visibility programmticaly and fire the listener to toggle check box ](http://ptsagkis.github.io/extjs_ol3_layercontrol/example6_vector.html)
 
 your html:
 
