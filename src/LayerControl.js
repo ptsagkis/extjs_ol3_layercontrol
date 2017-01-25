@@ -297,7 +297,7 @@ Ext.create('Ext.tree.Panel', {
 renderTo        : document.getElementById('laycntrl-mapcont'),
 constrain       : opt.mapconstrained,
 constrainTo     : elContstrainTo,
-manageHeight    : true,
+manageHeight    : false,
 title           : opt.title,
 id              : 'ol3treepanel',
 style           : {

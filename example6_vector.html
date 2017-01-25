@@ -47,62 +47,12 @@
            legendTitle : "Open Street Map",
            legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
         }
-      }),
-      new ol.layer.Tile({
-      source: new ol.source.BingMaps({
-        key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
-        imagerySet: 'Aerial' 
-      }),
-      title:'Bing Layer',
-      lyrControlOpt : {
-         legendGroup : 'Tile Layers',
-         legendnodeid: 'bingid',
-         legendTitle : "Bing Layer",
-         legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
-      }
-  	}),
-    new ol.layer.Tile({
-    source: new ol.source.MapQuest({layer: 'osm'}),
-    lyrControlOpt : {
-           legendGroup  : 'Tile Layers',
-           legendnodeid : 'mqosmid',
-           legendTitle  : "MapQuest Open Street Map",
-           legendImgUrl : "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
-        }
-    }),
-    new ol.layer.Image({
-  //  extent: [-13884991, 2870341, -7455066, 6338219],
-    source: new ol.source.ImageWMS({
-      url: 'http://suite.opengeo.org/geoserver/wms',
-      params: {'LAYERS': 'opengeo:countries'},
-      serverType: 'geoserver'
-      }),
-    lyrControlOpt : {
-           legendGroup  : 'Wms Layers',
-           legendnodeid : 'wms1',
-           legendTitle  : "opengeo:countries",
-           legendImgUrl : "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
-        }
-    }),
-    new ol.layer.Tile({
-    extent: [-13884991, 2870341, -7455066, 6338219],
-    source: new ol.source.TileWMS({
-      url: 'http://suite.opengeo.org/geoserver/wms',
-      params: {'LAYERS': 'usa:states', 'TILED': true},
-      serverType: 'geoserver'
-      }),
-      lyrControlOpt : {
-           legendGroup  : 'Wms Layers',
-           legendnodeid : 'wms2',
-           legendTitle  : "usa:states",
-           legendImgUrl : "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
-        }
-    })
+      })
     ],
     target: 'map',
     view: new ol.View({
-      center: [0, 0],
-      zoom: 2,
+      center: [-8908887.277395891, 5381918.072437216],
+      zoom: 12,
       rotation: 0
     })
     });
@@ -114,18 +64,20 @@
     loader: function (extent) {
         //asign the loading behaviour hear using the  legendnodeid + "___loadingimg"
         document.getElementById('wfs1'+'___loadingimg').src = 'css/images/loading.png';
-        $.ajax('http://demo.opengeo.org/geoserver/wfs', {
+        console.log("start loading feats!!!!")
+        $.ajax('http://demo.boundlessgeo.com/geoserver/wfs', {
             type: 'GET',
             data: {
                 service: 'WFS',
                 version: '1.1.0',
                 request: 'GetFeature',
-                typename: 'water_areas',
+                typename: 'osm:water_areas',
                 srsname: 'EPSG:3857',
                 bbox: extent.join(',') + ',EPSG:3857'
             }
         }).done(loadFeatures)
             .fail(function () {
+            console.log("fail loading feats!!!!")
             //place here any actions on fail loading layer
             //asign the loading behaviour hear using the  legendnodeid + "___loadingimg"
             document.getElementById('wfs1'+'___loadingimg').src = 'css/images/no.png';
@@ -133,6 +85,8 @@
     },
     strategy: ol.loadingstrategy.bbox
     });
+    
+    
     layerVector = new ol.layer.Vector({
     source          : sourceVector,
     minResolution   : getResolutionFromScale(map,100),
@@ -182,6 +136,7 @@
     function loadFeatures(response) {
     formatWFS = new ol.format.WFS(),
     sourceVector.addFeatures(formatWFS.readFeatures(response));
+    console.log("loading feats!!!!")
     //asign the loading behaviour hear using the  legendnodeid + "___loadingimg"
         document.getElementById('wfs1'+'___loadingimg').src = 'css/images/ok.png';
     //document.getElementById('laodingcont').innerHTML = "<font color='green'>finish loading vector layer.</font>";

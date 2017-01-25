@@ -2,13 +2,13 @@
 <html>
   <head>
   <link rel="stylesheet" type="text/css" href="https://extjs.cachefly.net/ext/gpl/5.1.0/packages/ext-theme-classic/build/resources/ext-theme-classic-all-debug.css"/>
-  <link rel="stylesheet" type="text/css" href="http://openlayers.org/en/v3.11.2/css/ol.css"/>
+  <link rel="stylesheet" type="text/css" href="http://openlayers.org/en/latest/css/ol.css"/>
   <link rel="stylesheet" type="text/css" href="css/LayerControl.css"/>
   
   
   
   <script type="text/javascript" src="http://cdn.sencha.com/ext/gpl/5.1.0/build/ext-all-debug.js" ></script>
-  <script type="text/javascript" src="http://openlayers.org/en/v3.11.2/build/ol-debug.js" ></script>
+  <script type="text/javascript" src="http://openlayers.org/en/latest/build/ol-debug.js" ></script>
   <script type="text/javascript" src="src/LayerControl.js" ></script>
   <script type="text/javascript" src="src/LayerControlLang.js" ></script>
   
@@ -39,6 +39,7 @@
         imagerySet: 'Aerial' 
       }),
       title:'Bing Layer',
+      visible:false,
       lyrControlOpt : {
          legendGroup : 'Tile Layers',
          legendnodeid: 'bingid',
@@ -46,15 +47,7 @@
          legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
       }
   	}),
-    new ol.layer.Tile({
-    source: new ol.source.MapQuest({layer: 'osm'}),
-    lyrControlOpt : {
-           legendGroup  : 'Tile Layers',
-           legendnodeid : 'mqosmid',
-           legendTitle  : "MapQuest Open Street Map",
-           legendImgUrl : "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
-        }
-    }),
+    
     new ol.layer.Image({
   //  extent: [-13884991, 2870341, -7455066, 6338219],
     source: new ol.source.ImageWMS({
@@ -62,6 +55,7 @@
       params: {'LAYERS': 'opengeo:countries'},
       serverType: 'geoserver'
       }),
+    visible:false,
     lyrControlOpt : {
            legendGroup  : 'Wms Layers',
            legendnodeid : 'wms1',
@@ -72,17 +66,21 @@
     new ol.layer.Tile({
     //extent: [-13884991, 2870341, -7455066, 6338219],
     source: new ol.source.TileWMS({
-      url: 'http://suite.opengeo.org/geoserver/wms',
-      params: {'LAYERS': 'usa:states', 'TILED': true},
-      serverType: 'geoserver'
-      }),
-      lyrControlOpt : {
+        preload: Infinity,
+        url: 'http://suite.opengeo.org/geoserver/wms',
+        serverType:'geoserver',
+        params:{
+            'LAYERS':"usa:states", 'TILED':true
+        }}),
+        lyrControlOpt : {
            legendGroup  : 'Wms Layers',
            legendnodeid : 'wms2',
            legendTitle  : "usa:states",
            legendImgUrl : "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
         }
+     
     })
+    
     ],
     target: 'map',
     view: new ol.View({
