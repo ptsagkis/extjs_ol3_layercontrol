@@ -19,7 +19,20 @@
   <script type="text/javascript">
   Ext.onReady(function() {
   document.getElementById('theme1').disabled = true;
-  document.getElementById('theme2').disabled = false;  
+  document.getElementById('theme2').disabled = false;
+  
+  
+  var osmLayer = new ol.layer.Tile({  
+        title:"OSM Layer",
+        source: new ol.source.OSM(),
+        lyrControlOpt : {
+           legendGroup : 'Tile Layers',
+           legendnodeid: 'osmid',
+           legendTitle : "Open Street Map",
+           legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
+        }
+      });
+       
   var lyrControl =  new ol.control.LayerControl({
          title            : "Layers on map",
          draggable        : true,
@@ -38,16 +51,7 @@
     lyrControl  
     ]),
     layers: [
-      new ol.layer.Tile({  
-        title:"OSM Layer",
-        source: new ol.source.OSM(),
-        lyrControlOpt : {
-           legendGroup : 'Tile Layers',
-           legendnodeid: 'osmid',
-           legendTitle : "Open Street Map",
-           legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
-        }
-      })
+      osmLayer
     ],
     target: 'map',
     view: new ol.View({
@@ -115,6 +119,11 @@
     lyrControl.setMap(lyrControl.getMap());
     }
     
+    document.getElementById("lyrvis").onclick = function(){
+    osmLayer.setVisible(!osmLayer.getVisible());
+    }
+    
+    
     
     function switchThemes() {
     console.info("switching themes")
@@ -157,6 +166,7 @@
         </div>
         <button id="theme_switcher" >neptune/classic theme</button>
         <button id="vecadd" >add preconfigured vector layer</button>
+        <button id="lyrvis" >toggle visibility for OSM Layer</button>
         
         
 
