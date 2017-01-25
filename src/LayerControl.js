@@ -209,7 +209,7 @@ console.log("layer removed",e);
  * action change visibility programmatically
  */
 ol.control.LayerControl.prototype.onLayerVisChanged = function(e){
-console.log("visibility listener")
+console.log("visibility listener");
 this.treePanel.getStore().getNodeById(e.target.get('lyrControlOpt').legendnodeid+'___treeid').set('checked',e.target.get('visible'));
 }
 
