@@ -77,15 +77,18 @@ ol.control.LayerControl = function(opt_options) {
 ol.inherits(ol.control.LayerControl, ol.control.Control);
 
 
+
+
 /**
  * 1. Asign the map to the control
- * 2. Asign the event "add","remove"  to the layers {ol.Collection} of the map
+ * 2. Asign the event "add","remove", "change:visibility"  to the layers {ol.Collection} of the map
  * 3. Asign the load start load end events to each layer
  * 4. Build the child nodes to add on tree
  */
 ol.control.LayerControl.prototype.setMap = function(map) {
 ol.control.Control.prototype.setMap.call(this, map);//register the map to the control
     var lyrChildArray = new Array();
+    var this_=this;
     if (map) { 
         //set the layers exist on map to the lyrCollection property    
         this.lyrCollection = map.getLayers();
@@ -150,8 +153,10 @@ ol.control.Control.prototype.setMap.call(this, map);//register the map to the co
           
            //build control's layers
           lyrChildArray.push(layer);
+          //asign  the visibility listener. Also any layer specific listeners could be placed here
+          layer.on('change:visible',this_.onLayerVisChanged,this_);
         }
-        
+         
         });
     this.layers = lyrChildArray;
     //populate the tree panel with data 
@@ -200,7 +205,13 @@ ol.control.LayerControl.prototype.onLayerMove = function(e){
 console.log("layer removed",e);
 }
 
-
+/**
+ * action change visibility programmatically
+ */
+ol.control.LayerControl.prototype.onLayerVisChanged = function(e){
+console.log("visibility listener")
+this.treePanel.getStore().getNodeById(e.target.get('lyrControlOpt').legendnodeid+'___treeid').set('checked',e.target.get('visible'));
+}
 
 
 /**
