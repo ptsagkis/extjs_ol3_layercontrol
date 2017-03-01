@@ -1,0 +1,188 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+ 
+<html>
+  <head>
+  <meta charset="UTF-8">
+  
+  <link rel="stylesheet" id="theme1" type="text/css" href="https://extjs.cachefly.net/ext/gpl/5.1.0/packages/ext-theme-classic/build/resources/ext-theme-classic-all-debug.css"/>
+  <link rel="stylesheet" id="theme2" type="text/css" href="https://extjs.cachefly.net/ext/gpl/5.1.0/packages/ext-theme-neptune/build/resources/ext-theme-neptune-all-debug.css"/>
+  
+  <link rel="stylesheet" type="text/css" href="http://openlayers.org/en/latest/css/ol.css"/>
+  <link rel="stylesheet" type="text/css" href="css/LayerControl.css"/>
+  
+  
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="http://cdn.sencha.com/ext/gpl/5.1.0/build/ext-all-debug.js" ></script>
+  <script src="http://openlayers.org/en/latest/build/ol-debug.js" ></script>
+
+  <script src="src/LayerControl.js" ></script>
+  <script src="src/LayerControlLang.js" ></script>
+  <style>
+   
+  #lyrpaneltoggler {
+    background-color: yellow;
+    width:60px;
+}
+</style>
+  
+  <script type="text/javascript">
+  Ext.onReady(function() {
+  document.getElementById('theme1').disabled = true;
+  document.getElementById('theme2').disabled = false;
+      
+  
+  var osmLayer = new ol.layer.Tile({  
+        title:"OSM Layer",
+        source: new ol.source.OSM(),
+        lyrControlOpt : {
+           legendGroup : 'Tile Layers',
+           legendnodeid: 'osmid',
+           legendTitle : "Open Street Map",
+           legendImgUrl: "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
+        }
+      });
+       
+  var lyrControl =  new ol.control.LayerControl({
+         title            : "Layers on map",
+         draggable        : true,
+         width            : 250,
+         mapdivid         : 'map',
+         target           : 'lyrpaneltoggler',
+         mapconstrained   : false ,
+         hidden           : false , 
+         lang             : 'en'
+      });
+    var map = new ol.Map({
+    controls: ol.control.defaults({
+      attributionOptions: /** @type {olx.control.AttributionOptions} */ ({
+        collapsible: true
+      })
+    }).extend([
+    lyrControl  
+    ]),
+    layers: [
+      osmLayer
+    ],
+    target: 'map',
+    view: new ol.View({
+      center: [0, 0],
+      zoom: 2,
+      rotation: 0
+    })
+    });
+    
+    
+    
+    
+    sourceVector = new ol.source.Vector({
+    loader: function (extent) {
+        //asign the loading behaviour hear using the  legendnodeid + "___loadingimg"
+        document.getElementById('wfs1'+'___loadingimg').src = 'css/images/loading.png';
+        console.log("start loading feats!!!!")
+        $.ajax('http://demo.boundlessgeo.com/geoserver/wfs', {
+            type: 'GET',
+            data: {
+                service: 'WFS',
+                version: '1.1.0',
+                request: 'GetFeature',
+                typename: 'osm:water_areas',
+                srsname: 'EPSG:3857',
+                bbox: extent.join(',') + ',EPSG:3857'
+            }
+        }).done(loadFeatures)
+            .fail(function () {
+            console.log("fail loading feats!!!!")
+            //place here any actions on fail loading layer
+            //asign the loading behaviour hear using the  legendnodeid + "___loadingimg"
+            document.getElementById('wfs1'+'___loadingimg').src = 'css/images/no.png';
+        });
+    },
+    strategy: ol.loadingstrategy.bbox
+    });
+    
+    
+    layerVector = new ol.layer.Vector({
+    source          : sourceVector,
+    minResolution   : getResolutionFromScale(map,100),
+    maxResolution   : getResolutionFromScale(map,1000000),
+    lyrControlOpt : {
+           legendGroup  : 'WFS layers',
+           legendnodeid : 'wfs1',
+           legendTitle  : "water areas",
+           legendImgUrl : "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
+        },
+    style: new ol.style.Style({
+        stroke: new ol.style.Stroke({
+            color: 'rgba(0, 0, 255, 1.0)',
+            width: 2
+        })
+      })
+    });
+    
+    
+    document.getElementById("theme_switcher").onclick = function(){
+    switchThemes();
+    }
+    
+    document.getElementById("vecadd").onclick = function(){
+    map.addLayer(layerVector);
+    lyrControl.setMap(lyrControl.getMap());
+    }
+    
+    document.getElementById("lyrvis").onclick = function(){
+    osmLayer.setVisible(!osmLayer.getVisible());
+    }
+    
+    
+    
+    function switchThemes() {
+    console.info("switching themes")
+   var theme1 =  document.getElementById('theme1');
+   var theme2 =  document.getElementById('theme2');
+      if (theme2.disabled === true)
+      {
+      theme1.disabled = true;
+      theme2.disabled = false;
+      } else {
+      theme1.disabled = false;
+      theme2.disabled = true;
+      }
+ 
+    lyrControl.treePanel.doLayout(true);
+    }
+    
+    
+    function loadFeatures(response) {
+    formatWFS = new ol.format.WFS(),
+    sourceVector.addFeatures(formatWFS.readFeatures(response));
+    console.log("loading feats!!!!")
+    //asign the loading behaviour hear using the  legendnodeid + "___loadingimg"
+        document.getElementById('wfs1'+'___loadingimg').src = 'css/images/ok.png';
+    //document.getElementById('laodingcont').innerHTML = "<font color='green'>finish loading vector layer.</font>";
+    }
+    }); 
+    
+    
+    
+    
+    
+  </script>                 
+  <title></title>
+  </head>
+  <body>
+       
+        <div class='laycntrl-wrapper'>
+        
+        <div id="map" style="width:100%;height:500px"></div>
+        </div>
+        <div id="lyrpaneltoggler" ></div>
+        <button id="theme_switcher" >neptune/classic theme</button>
+        <button id="vecadd" >add preconfigured vector layer</button>
+        <button id="lyrvis" >toggle visibility for OSM Layer</button>
+        
+        
+        
+
+  </body>
+</html>
+

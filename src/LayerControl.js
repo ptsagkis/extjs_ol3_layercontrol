@@ -41,10 +41,8 @@ ol.control.LayerControl = function(opt_options) {
   //These are all the layers not just those within then control .
   //the collection populates within setMap method of the control
   this.lyrCollection = new ol.Collection(); 
-  //set the locale abbreviations
-  //you may add new language abbrevations here and then pass options.lang during control initialasiation
-  
-    //creates the extjs tree panel 
+    
+  //creates the extjs tree panel 
   this.treePanel = this.createThePanel(options);
   var this_ = this;
     //toggle the panel. show/hide
@@ -62,7 +60,10 @@ ol.control.LayerControl = function(opt_options) {
   divControl.addEventListener('touchstart', this_.toggleTreePanel, false);
 
   var element = document.createElement('div');
+  //if target not supplied  use the default style for ol3 controls
+  if (!options.target){
   element.className = 'ol-unselectable ol-layercontrol';
+  }
   element.appendChild(divControl);
   
   
@@ -423,8 +424,10 @@ return retPanel;
 
 
 /**
- *toggle the visbility 
- *for the supplied layer tree node id
+ * toggle the visbility 
+ * for the supplied layer tree node id
+ * @lytreerid {string} the id registered for the layer you want to toggle
+ * @vis {Boolean} true/false --> visible/not visible
  */
 
 ol.control.LayerControl.prototype.toggleLyrVisibility = function(lytreerid,vis)
