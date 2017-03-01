@@ -42,6 +42,8 @@ example here
 
 [change visibility programmticaly and fire the listener to toggle check box ](http://ptsagkis.github.io/extjs_ol3_layercontrol/example6_vector.html)
 
+[set a target outside the map to place the control](http://ptsagkis.github.io/extjs_ol3_layercontrol/example7_target.html)
+
 your html:
 
           <div class='laycntrl-wrapper'>
