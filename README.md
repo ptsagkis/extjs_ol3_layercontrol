@@ -5,10 +5,11 @@
 
 Adding a layer control using the extjs treepanel api.
 
-Build on ol3 v3.10.1 and extjs 5.1 versions
-but also works with latest openlayers v3.20.x
+Build on ol3 v3.10.1 and extjs 5.1 versions 
+but also works with latest openlayers v4.0.x
+and extjs 6.x
 
-Version 0.1
+Version 0.2
 
 ## Supported Functionality
 
