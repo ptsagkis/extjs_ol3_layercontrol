@@ -72,13 +72,20 @@
 <p>your javascript:</p>
 
 <pre><code>  new ol.control.LayerControl({
-     title           : "Layer Management",    //the title on top of the tree panel
-     draggable       : true,                  //true||false treepanel is drggable or not
-     width           : 250,                   //width of the tree panel
-     mapdivid        : 'map',                 //div element of map
-     mapconstrained  : true                   //true||false treepanel contstrained to mapdiv element 
-     hidden          : true                   //true||false treepanel should be visible or not at start up
-     lang            : 'en'                   //laguage to use for abbrevations . default is 'en'
+     title              : "Layer Management",    //the title on top of the tree panel
+     draggable          : true,                  //true||false treepanel is drggable or not
+     width              : 250,                   //width of the tree panel
+     mapdivid           : 'map',                 //div element of map
+     mapconstrained     : true                   //true||false treepanel contstrained to mapdiv element 
+     hidden             : true                   //true||false treepanel should be visible or not at start up
+     lang               : 'en'                   //laguage to use for abbrevations . default is 'en',   
+     capabilitiesURLs   : [
+       "http://giswebservices.massgis.state.ma.us/geoserver/wms?request=GetCapabilities",  //add as many online resources you feel like
+       "examples_data/ogcsample1.xml"                                                      //you will be able to get a list of the available layers
+      ]                                                                                    //and add this on map. If not supplied the following capabilitiesURLs will be used
+                                                                                           // "examples_data/ogcsample1.xml",
+                                                                                           // "examples_data/ogcsample2.xml"
+
   })
 </code></pre>
 
