@@ -53,7 +53,7 @@ ol.control.LayerControl = function(opt_options) {
    } else {
    this_.showTreePanel()
    }
-   this_.treePanel.doLayout(true);
+
   };
    //add the listeners function to the control button 
   divControl.addEventListener('click', this_.toggleTreePanel, false);
@@ -418,7 +418,7 @@ tbar            : [
             }
       ]
 });
-retPanel.doLayout(true);
+
 return retPanel;
 };
 
