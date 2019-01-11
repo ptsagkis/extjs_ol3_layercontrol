@@ -62,7 +62,7 @@
     new ol.layer.Image({
   //  extent: [-13884991, 2870341, -7455066, 6338219],
     source: new ol.source.ImageWMS({
-      url: 'http://suite.opengeo.org/geoserver/wms',
+      url: 'https://demo.boundlessgeo.com/geoserver/wms',
       params: {'LAYERS': 'opengeo:countries'},
       serverType: 'geoserver'
       }),
@@ -76,7 +76,7 @@
     new ol.layer.Tile({
     extent: [-13884991, 2870341, -7455066, 6338219],
     source: new ol.source.TileWMS({
-      url: 'http://suite.opengeo.org/geoserver/wms',
+      url: 'https://demo.boundlessgeo.com/geoserver/wms',
       params: {'LAYERS': 'usa:states', 'TILED': true},
       serverType: 'geoserver'
       }),

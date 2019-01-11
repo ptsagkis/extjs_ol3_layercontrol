@@ -65,7 +65,7 @@
     new ol.layer.Image({
   //  extent: [-13884991, 2870341, -7455066, 6338219],
     source: new ol.source.ImageWMS({
-      url: 'http://suite.opengeo.org/geoserver/wms',
+      url: 'https://demo.boundlessgeo.com/geoserver/wms',
       params: {'LAYERS': 'opengeo:countries'},
       serverType: 'geoserver'
       }),
@@ -79,7 +79,7 @@
     new ol.layer.Tile({
     extent: [-13884991, 2870341, -7455066, 6338219],
     source: new ol.source.TileWMS({
-      url: 'http://suite.opengeo.org/geoserver/wms',
+      url: 'https://demo.boundlessgeo.com/geoserver/wms',
       params: {'LAYERS': 'usa:states', 'TILED': true},
       serverType: 'geoserver'
       }),
@@ -106,13 +106,13 @@
     loader: function (extent) {
         //asign the loading behaviour hear using the  legendnodeid + "___loadingimg"
         document.getElementById('wfs1'+'___loadingimg').src = 'css/images/loading.png';
-        $.ajax('http://demo.opengeo.org/geoserver/wfs', {
-            type: 'GET',
+        $.ajax('https://demo.boundlessgeo.com/geoserver/wfs', {
+            type: 'POST',
             data: {
                 service: 'WFS',
                 version: '1.1.0',
                 request: 'GetFeature',
-                typename: 'water_areas',
+                typename: 'og:streams',
                 srsname: 'EPSG:3857',
                 bbox: extent.join(',') + ',EPSG:3857'
             }
@@ -132,7 +132,7 @@
     lyrControlOpt : {
            legendGroup  : 'WFS layers',
            legendnodeid : 'wfs1',
-           legendTitle  : "water areas",
+           legendTitle  : "Streams",
            legendImgUrl : "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
         },
     style: new ol.style.Style({

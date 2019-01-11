@@ -1,6 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
+   <meta charset="UTF-8">
   <link rel="stylesheet" type="text/css" href="https://extjs.cachefly.net/ext/gpl/5.1.0/packages/ext-theme-classic/build/resources/ext-theme-classic-all-debug.css"/>
   <link rel="stylesheet" type="text/css" href="http://openlayers.org/en/latest/css/ol.css"/>
   <link rel="stylesheet" type="text/css" href="css/LayerControl.css"/>
@@ -33,7 +34,7 @@
       new ol.layer.Tile({  
         title:"OSM Layer",
         source: new ol.source.OSM(),
-        visible:false,
+        visible:true,
         lyrControlOpt : {
            legendGroup : 'Tile Layers',
            legendnodeid: 'osmid',
@@ -46,6 +47,7 @@
         key: 'Ak-dzM4wZjSqTlzveKz5u0d4IQ4bRzVI309GxmkgSVr1ewS6iPSrOvOKhA-CJlm3',
         imagerySet: 'Aerial' 
       }),
+      visible:false,
       title:'Bing Layer',
       lyrControlOpt : {
          legendGroup : 'Tile Layers',
@@ -58,7 +60,7 @@
     new ol.layer.Image({
   //  extent: [-13884991, 2870341, -7455066, 6338219],
     source: new ol.source.ImageWMS({
-      url: 'http://suite.opengeo.org/geoserver/wms',
+      url: 'https://demo.boundlessgeo.com/geoserver/wms',
       params: {'LAYERS': 'opengeo:countries'},
       serverType: 'geoserver'
       }),
@@ -72,7 +74,7 @@
     new ol.layer.Tile({
     extent: [-13884991, 2870341, -7455066, 6338219],
     source: new ol.source.TileWMS({
-      url: 'http://suite.opengeo.org/geoserver/wms',
+      url: 'https://demo.boundlessgeo.com/geoserver/wms',
       params: {'LAYERS': 'usa:states', 'TILED': true},
       serverType: 'geoserver'
       }),

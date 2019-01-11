@@ -62,7 +62,7 @@
     new ol.layer.Image({
   //  extent: [-13884991, 2870341, -7455066, 6338219],
     source: new ol.source.ImageWMS({
-      url: 'http://suite.opengeo.org/geoserver/wms',
+      url: 'https://demo.boundlessgeo.com/geoserver/wms',
       params: {'LAYERS': 'opengeo:countries'},
       serverType: 'geoserver'
       }),
@@ -70,25 +70,25 @@
            legendGroup  : 'Wms Layers',
            legendnodeid : 'wms1',
            legendTitle  : "opengeo:countries",
-           legendImgUrl : "http://suite.opengeo.org/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=16&HEIGHT=16&LAYER=opengeo:countries"
+           legendImgUrl : "https://demo.boundlessgeo.com/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=16&HEIGHT=16&LAYER=opengeo:countries"
         }
     }),
     new ol.layer.Image({
     source: new ol.source.ImageWMS({
-      url: 'http://suite.opengeo.org/geoserver/wms',
-      params: {'LAYERS': 'opengeo:cities'},
+      url: 'https://demo.boundlessgeo.com/geoserver/wms',
+      params: {'LAYERS': 'usgs:tracts'},
       serverType: 'geoserver'
       }),
     lyrControlOpt : {
            legendGroup  : 'Wms Layers',
            legendnodeid : 'wms2',
-           legendTitle  : "World Cities ",
-           legendImgUrl : "http://suite.opengeo.org/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=16&HEIGHT=16&LAYER=opengeo:cities"
+           legendTitle  : "Census Tracts",
+           legendImgUrl : "https://demo.boundlessgeo.com/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=16&HEIGHT=16&LAYER=usgs:tracts"
         }
     }),
     new ol.layer.Tile({
     source: new ol.source.TileWMS({
-      url: 'http://suite.opengeo.org/geoserver/wms',
+      url: 'https://demo.boundlessgeo.com/geoserver/wms',
       params: {'LAYERS': 'usa:states', 'TILED': true},
       serverType: 'geoserver'
       }),
@@ -96,7 +96,7 @@
            legendGroup  : 'Wms Layers',
            legendnodeid : 'wms3',
            legendTitle  : "USA States",
-           legendImgUrl : "http://suite.opengeo.org/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=16&HEIGHT=16&LAYER=usa:states"
+           legendImgUrl : "https://demo.boundlessgeo.com/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&FORMAT=image/png&WIDTH=16&HEIGHT=16&LAYER=usa:states"
         }
     })
     ],
