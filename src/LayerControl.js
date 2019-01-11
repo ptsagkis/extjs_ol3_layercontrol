@@ -211,7 +211,7 @@ console.log("layer removed",e);
  */
 ol.control.LayerControl.prototype.onLayerVisChanged = function(e){
 console.log("visibility listener");
-this.treePanel.getStore().getNodeById(e.target.get('lyrControlOpt').legendnodeid+'___treeid').set('checked',e.target.get('visible'));
+Ext.getCmp('ol3treepanel').getStore().getNodeById(e.target.get('lyrControlOpt').legendnodeid+'___treeid').set('checked',e.target.get('visible'));
 }
 
 
@@ -662,7 +662,7 @@ var selectedNode = this_.treePanel.getSelectionModel().getSelection();
  function getResolutionFromScale(mymap,scale){
     var units = mymap.getView().getProjection().getUnits();
     var dpi = 25.4 / 0.28;
-    var mpu = ol.proj.METERS_PER_UNIT[units];
+    var mpu = ol.proj.Units.METERS_PER_UNIT[units];
     var resolution = scale/(mpu * 39.37 * dpi);
     return resolution;
 }
