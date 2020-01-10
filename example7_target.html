@@ -79,13 +79,13 @@
         //asign the loading behaviour hear using the  legendnodeid + "___loadingimg"
         document.getElementById('wfs1'+'___loadingimg').src = 'css/images/loading.png';
         console.log("start loading feats!!!!")
-        $.ajax('http://demo.boundlessgeo.com/geoserver/wfs', {
-            type: 'GET',
+        $.ajax('https://demo.boundlessgeo.com/geoserver/wfs', {
+            type: 'POST',
             data: {
                 service: 'WFS',
                 version: '1.1.0',
                 request: 'GetFeature',
-                typename: 'osm:water_areas',
+                typename: 'og:streams',
                 srsname: 'EPSG:3857',
                 bbox: extent.join(',') + ',EPSG:3857'
             }
@@ -108,7 +108,7 @@
     lyrControlOpt : {
            legendGroup  : 'WFS layers',
            legendnodeid : 'wfs1',
-           legendTitle  : "water areas",
+           legendTitle  : "Streams",
            legendImgUrl : "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcQuc6e1CN-FTgOjxnG0YLjQ-vxQ4T9jHXdhimbTHn1NmbXxzDJa"
         },
     style: new ol.style.Style({
